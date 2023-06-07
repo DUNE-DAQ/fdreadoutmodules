@@ -17,6 +17,7 @@ daq_setup_environment()
 
 find_package(appfwk REQUIRED)
 find_package(opmonlib REQUIRED)
+find_package(readoutmodules REQUIRED)
 find_package(Boost COMPONENTS unit_test_framework REQUIRED)
 
 ##############################################################################
@@ -48,14 +49,14 @@ daq_add_python_bindings(*.cpp LINK_LIBRARIES ${PROJECT_NAME} ) # Any additional 
 
 # See https://dune-daq-sw.readthedocs.io/en/latest/packages/daq-cmake/#daq_add_plugin
 
-daq_add_plugin(DummyModule duneDAQModule LINK_LIBRARIES appfwk::appfwk) # Replace appfwk library with a more specific library when appropriate
+daq_add_plugin(FDDataLinkHandler duneDAQModule LINK_LIBRARIES appfwk::appfwk readoutmodules::readoutmodules fdreadoutlibs::fdreadoutlibs) # Replace appfwk library with a more specific library when appropriate
 
 ##############################################################################
 
 
 # See https://dune-daq-sw.readthedocs.io/en/latest/packages/daq-cmake/#daq_add_unit_test
 
-daq_add_unit_test(Placeholder_test LINK_LIBRARIES)  # Placeholder_test should be replaced with real unit tests
+#daq_add_unit_test(Placeholder_test LINK_LIBRARIES)  # Placeholder_test should be replaced with real unit tests
 
 ##############################################################################
 
