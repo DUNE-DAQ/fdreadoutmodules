@@ -8,6 +8,9 @@
 #ifndef FDREADOUTMODULES_PLUGINS_FDDATALINKHANDLER_HPP_
 #define FDREADOUTMODULES_PLUGINS_FDDATALINKHANDLER_HPP_
 
+#include "appfwk/cmd/Nljs.hpp"
+#include "appfwk/app/Nljs.hpp"
+#include "appfwk/cmd/Structs.hpp"
 #include "appfwk/DAQModule.hpp"
 
 #include "readoutmodules/DataLinkHandlerBase.hpp"
