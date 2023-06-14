@@ -16,8 +16,11 @@ daq_setup_environment()
 
 
 find_package(appfwk REQUIRED)
+find_package(logging REQUIRED)
 find_package(opmonlib REQUIRED)
 find_package(readoutmodules REQUIRED)
+find_package(fdreadoutlibs REQUIRED)
+find_package(fddetdataformats REQUIRED)
 find_package(Boost COMPONENTS unit_test_framework REQUIRED)
 
 ##############################################################################
@@ -28,12 +31,31 @@ find_package(Boost COMPONENTS unit_test_framework REQUIRED)
 daq_codegen(dummymodule.jsonnet TEMPLATES Structs.hpp.j2 Nljs.hpp.j2)
 daq_codegen(dummymoduleinfo.jsonnet DEP_PKGS opmonlib TEMPLATES opmonlib/InfoStructs.hpp.j2 opmonlib/InfoNljs.hpp.j2)
 
+daq_codegen(dummyconsumerinfo.jsonnet DEP_PKGS opmonlib TEMPLATES opmonlib/InfoStructs.hpp.j2 opmonlib/InfoNljs.hpp.j2)
+
+##############################################################################
+# Dependency sets
+set(FDREADOUTMODULES_DEPENDENCIES
+#tools
+  appfwk::appfwk
+  logging::logging
+  readoutlibs::readoutlibs
+  readoutmodules::readoutmodules
+  fdreadoutlibs::fdreadoutlibs
+  fddetdataformats::fddetdataformats
+)
+
+set(FDREADOUTLIBS_USE_INTRINSICS ON)
+
+if(${FDREADOUTLIBS_USE_INTRINSICS})
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -mavx2")
+endif()
 ##############################################################################
 
 
 # See https://dune-daq-sw.readthedocs.io/en/latest/packages/daq-cmake/#daq_add_library
 
-daq_add_library( LINK_LIBRARIES ) # Any source files and/or dependent libraries to link in not yet determined
+daq_add_library( LINK_LIBRARIES ${FDREADOUTMODULES_DEPENDENCIES} ) # Any source files and/or dependent libraries to link in not yet determined
 
 ##############################################################################
 
@@ -48,6 +70,11 @@ daq_add_python_bindings(*.cpp LINK_LIBRARIES ${PROJECT_NAME} ) # Any additional 
 
 
 # See https://dune-daq-sw.readthedocs.io/en/latest/packages/daq-cmake/#daq_add_plugin
+
+daq_add_plugin(DataRecorder duneDAQModule LINK_LIBRARIES appfwk::appfwk readoutmodules::readoutmodules fdreadoutlibs::fdreadoutlibs)
+daq_add_plugin(ErroredFrameConsumer duneDAQModule LINK_LIBRARIES appfwk::appfwk readoutmodules::readoutmodules fddetdataformats::fddetdataformats)
+daq_add_plugin(FragmentConsumer duneDAQModule LINK_LIBRARIES appfwk::appfwk readoutmodules::readoutmodules fddetdataformats::fddetdataformats)
+daq_add_plugin(TimeSyncConsumer duneDAQModule LINK_LIBRARIES appfwk::appfwk readoutmodules::readoutmodules)
 
 daq_add_plugin(FDDataLinkHandler duneDAQModule LINK_LIBRARIES appfwk::appfwk readoutmodules::readoutmodules fdreadoutlibs::fdreadoutlibs)
 daq_add_plugin(FDFakeCardReader duneDAQModule LINK_LIBRARIES appfwk::appfwk readoutmodules::readoutmodules fdreadoutlibs::fdreadoutlibs)
