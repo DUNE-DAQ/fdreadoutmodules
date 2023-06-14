@@ -75,7 +75,6 @@ daq_add_plugin(DataRecorder duneDAQModule LINK_LIBRARIES appfwk::appfwk readoutm
 daq_add_plugin(ErroredFrameConsumer duneDAQModule LINK_LIBRARIES appfwk::appfwk readoutmodules::readoutmodules fddetdataformats::fddetdataformats)
 daq_add_plugin(FragmentConsumer duneDAQModule LINK_LIBRARIES appfwk::appfwk readoutmodules::readoutmodules fddetdataformats::fddetdataformats)
 daq_add_plugin(TimeSyncConsumer duneDAQModule LINK_LIBRARIES appfwk::appfwk readoutmodules::readoutmodules)
-daq_add_plugin(FakeCardReader duneDAQModule LINK_LIBRARIES fdreadoutmodules)
 
 daq_add_plugin(FDDataLinkHandler duneDAQModule LINK_LIBRARIES appfwk::appfwk readoutmodules::readoutmodules fdreadoutlibs::fdreadoutlibs)
 daq_add_plugin(FDFakeCardReader duneDAQModule LINK_LIBRARIES appfwk::appfwk readoutmodules::readoutmodules fdreadoutlibs::fdreadoutlibs)
