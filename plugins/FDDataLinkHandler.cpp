@@ -96,7 +96,7 @@ FDDataLinkHandler::get_info(opmonlib::InfoCollector& ci, int level)
 }
 
 std::unique_ptr<readoutlibs::ReadoutConcept>
-FDDataLinkHandlercreate_readout(const nlohmann::json& args, std::atomic<bool>& run_marker)
+FDDataLinkHandler::create_readout(const nlohmann::json& args, std::atomic<bool>& run_marker)
 {
   namespace rol = dunedaq::readoutlibs;
   namespace fdl = dunedaq::fdreadoutlibs;
