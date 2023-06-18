@@ -17,7 +17,7 @@ namespace py = pybind11;
 namespace dunedaq::fdreadoutmodules::python {
 
 void
-register_renameme(py::module& m)
+register_renameme(py::module& /*the_module*/)
 {}
 
 } // namespace dunedaq::fdreadoutmodules::python
