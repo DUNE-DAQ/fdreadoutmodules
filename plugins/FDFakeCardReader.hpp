@@ -21,7 +21,7 @@ namespace dunedaq {
 namespace fdreadoutmodules {
 
 class FDFakeCardReader : public dunedaq::appfwk::DAQModule,
-                         private dunedaq::readoutmodules::FakeCardReaderBase
+                         public dunedaq::readoutmodules::FakeCardReaderBase
 {
 public:
   using inherited_fcr = dunedaq::readoutmodules::FakeCardReaderBase;
