@@ -21,6 +21,7 @@ find_package(opmonlib REQUIRED)
 find_package(readoutmodules REQUIRED)
 find_package(fdreadoutlibs REQUIRED)
 find_package(fddetdataformats REQUIRED)
+find_package(utilities REQUIRED)
 find_package(Boost COMPONENTS unit_test_framework REQUIRED)
 
 ##############################################################################
@@ -74,7 +75,7 @@ daq_add_python_bindings(*.cpp LINK_LIBRARIES ${PROJECT_NAME} ) # Any additional 
 daq_add_plugin(DataRecorder duneDAQModule LINK_LIBRARIES appfwk::appfwk readoutmodules::readoutmodules fdreadoutlibs::fdreadoutlibs)
 daq_add_plugin(ErroredFrameConsumer duneDAQModule LINK_LIBRARIES appfwk::appfwk readoutmodules::readoutmodules fddetdataformats::fddetdataformats)
 daq_add_plugin(FragmentConsumer duneDAQModule LINK_LIBRARIES appfwk::appfwk readoutmodules::readoutmodules fddetdataformats::fddetdataformats)
-daq_add_plugin(TimeSyncConsumer duneDAQModule LINK_LIBRARIES appfwk::appfwk readoutmodules::readoutmodules)
+daq_add_plugin(TimeSyncConsumer duneDAQModule LINK_LIBRARIES appfwk::appfwk readoutmodules::readoutmodules utilities::utilities)
 
 daq_add_plugin(FDDataLinkHandler duneDAQModule LINK_LIBRARIES appfwk::appfwk readoutmodules::readoutmodules fdreadoutlibs::fdreadoutlibs)
 daq_add_plugin(FDFakeCardReader duneDAQModule LINK_LIBRARIES appfwk::appfwk readoutmodules::readoutmodules fdreadoutlibs::fdreadoutlibs)

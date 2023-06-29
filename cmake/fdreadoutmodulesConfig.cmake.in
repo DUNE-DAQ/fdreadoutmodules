@@ -12,6 +12,7 @@ find_dependency(opmonlib)
 find_dependency(readoutmodules)
 find_dependency(fdreadoutlibs)
 find_dependency(fddetdataformats)
+find_dependency(utilities)
 find_dependency(Boost)
 
 # Figure out whether or not this dependency is an installed package or
