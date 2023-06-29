@@ -8,6 +8,6 @@
 
 #include "DummyConsumer.hpp"
 #include "DummyConsumer.cpp"
-#include "dfmessages/TimeSync.hpp"
+#include "utilities/TimeSync.hpp"
 
-DEFINE_DUNE_DAQ_MODULE(dunedaq::fdreadoutmodules::DummyConsumer<dunedaq::dfmessages::TimeSync>)
+DEFINE_DUNE_DAQ_MODULE(dunedaq::fdreadoutmodules::DummyConsumer<dunedaq::utilities::TimeSync>)
