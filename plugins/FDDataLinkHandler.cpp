@@ -127,7 +127,7 @@ FDDataLinkHandler::create_readout(const nlohmann::json& args, std::atomic<bool>&
     return readout_model;
   }
 */
-
+  /*
   // IF WIB2
   if (raw_dt.find("WIB2Frame") != std::string::npos) {
     TLOG_DEBUG(TLVL_WORK_STEPS) << "Creating readout for a DUNE-WIB";
@@ -140,7 +140,20 @@ FDDataLinkHandler::create_readout(const nlohmann::json& args, std::atomic<bool>&
     readout_model->init(args);
     return readout_model;
   }
-
+  */
+  // IF WIB2
+  if (raw_dt.find("WIB2Frame") != std::string::npos) {
+    TLOG_DEBUG(TLVL_WORK_STEPS) << "Creating readout for a DUNE-WIB";
+    auto readout_model = std::make_unique<
+      rol::ReadoutModel<fdt::DUNEWIBSuperChunkTypeAdapter,
+                        rol::ZeroCopyRecordingRequestHandlerModel<fdt::DUNEWIBSuperChunkTypeAdapter,
+                                                        rol::FixedRateQueueModel<fdt::DUNEWIBSuperChunkTypeAdapter>>,
+                        rol::FixedRateQueueModel<fdt::DUNEWIBSuperChunkTypeAdapter>,
+                        fdl::WIB2FrameProcessor>>(run_marker);
+    readout_model->init(args);
+    return readout_model;
+  }
+  /*
   // IF WIBEth
   if (raw_dt.find("WIBEthFrame") != std::string::npos) {
     TLOG_DEBUG(TLVL_WORK_STEPS) << "Creating readout for an Ethernet DUNE-WIB";
@@ -153,7 +166,21 @@ FDDataLinkHandler::create_readout(const nlohmann::json& args, std::atomic<bool>&
     readout_model->init(args);
     return readout_model;
   }
+  */
 
+  // IF WIBEth
+  if (raw_dt.find("WIBEthFrame") != std::string::npos) {
+    TLOG_DEBUG(TLVL_WORK_STEPS) << "Creating readout for an Ethernet DUNE-WIB";
+    auto readout_model = std::make_unique<
+      rol::ReadoutModel<fdt::DUNEWIBEthTypeAdapter,
+			rol::ZeroCopyRecordingRequestHandlerModel<fdt::DUNEWIBEthTypeAdapter,
+                                                        rol::FixedRateQueueModel<fdt::DUNEWIBEthTypeAdapter>>,
+                        rol::FixedRateQueueModel<fdt::DUNEWIBEthTypeAdapter>,
+                        fdl::WIBEthFrameProcessor>>(run_marker);
+    readout_model->init(args);
+    return readout_model;
+  }
+  
   // IF DAPHNE but use of SPSC queues as LB
   //if (inst.find("pds_queue") != std::string::npos) {
   //  TLOG_DEBUG(TLVL_WORK_STEPS) << "Creating readout for a pds using Searchable Queue";
