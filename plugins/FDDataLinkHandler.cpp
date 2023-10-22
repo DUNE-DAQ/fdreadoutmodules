@@ -41,10 +41,10 @@
 #include "fdreadoutlibs/ssp/SSPFrameProcessor.hpp"
 //#include "fdreadoutlibs/wib2/SWWIB2TriggerPrimitiveProcessor.hpp"
 #include "fdreadoutlibs/wib2/WIB2FrameProcessor.hpp"
-#include "fdreadoutlibs/TPCTPRequestHandler.hpp"
 #include "fdreadoutlibs/wibeth/WIBEthFrameProcessor.hpp"
 #include "fdreadoutlibs/tde/TDEFrameProcessor.hpp"
 //#include "fdreadoutlibs/wib/WIBFrameProcessor.hpp"
+#include "fdreadoutlibs/TPCTPReadoutModel.hpp"
 
 #include <memory>
 #include <sstream>
@@ -246,11 +246,13 @@ FDDataLinkHandler::create_readout(const nlohmann::json& args, std::atomic<bool>&
   // IF TriggerPrimitive (TPG)
   if (raw_dt.find("TriggerPrimitive") != std::string::npos) {
     TLOG(TLVL_WORK_STEPS) << "Creating readout for TriggerPrimitive";
-    auto readout_model = std::make_unique<rol::ReadoutModel<
+    /*auto readout_model = std::make_unique<rol::ReadoutModel<
       fdt::TriggerPrimitiveTypeAdapter,
       fdl::TPCTPRequestHandler,
       rol::SkipListLatencyBufferModel<fdt::TriggerPrimitiveTypeAdapter>,
       rol::TaskRawDataProcessorModel<fdt::TriggerPrimitiveTypeAdapter>>>(run_marker);
+    */
+    auto readout_model = std::make_unique<fdl::TPCTPReadoutModel>(run_marker);
     readout_model->init(args);
     return readout_model;
   }
