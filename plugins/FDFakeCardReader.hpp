@@ -8,10 +8,12 @@
 #ifndef FDREADOUTMODULES_PLUGINS_FDFAKECARDREADER_HPP_
 #define FDREADOUTMODULES_PLUGINS_FDFAKECARDREADER_HPP_
 
-#include "appfwk/cmd/Nljs.hpp"
-#include "appfwk/app/Nljs.hpp"
-#include "appfwk/cmd/Structs.hpp"
+//#include "appfwk/cmd/Nljs.hpp"
+//#include "appfwk/app/Nljs.hpp"
+//#include "appfwk/cmd/Structs.hpp"
+
 #include "appfwk/DAQModule.hpp"
+#include "appfwk/ModuleConfiguration.hpp"
 
 #include "readoutmodules/FakeCardReaderBase.hpp"
 
@@ -37,11 +39,11 @@ public:
   FDFakeCardReader(FDFakeCardReader&&) = delete;                 ///< FDFakeCardReader is not move-constructible
   FDFakeCardReader& operator=(FDFakeCardReader&&) = delete;      ///< FDFakeCardReader is not move-assignable
 
-  void init(const data_t&) override;
+  void init(std::shared_ptr<ModuleConfiguration> cfg) override;
   void get_info(opmonlib::InfoCollector& ci, int level) override;
 
   std::unique_ptr<readoutlibs::SourceEmulatorConcept>
-  create_source_emulator(const appfwk::app::ConnectionReference qi, std::atomic<bool>& run_marker) override;
+  create_source_emulator(string qi, std::atomic<bool>& run_marker) override;
 
 };
 

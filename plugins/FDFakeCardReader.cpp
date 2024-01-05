@@ -7,14 +7,15 @@
  */
 #include "FDFakeCardReader.hpp"
 
-#include "appfwk/app/Nljs.hpp"
-#include "appfwk/cmd/Nljs.hpp"
+//#include "appfwk/app/Nljs.hpp"
+//#include "appfwk/cmd/Nljs.hpp"
 #include "logging/Logging.hpp"
 
 #include "readoutlibs/ReadoutLogging.hpp"
 #include "readoutlibs/ReadoutIssues.hpp"
-#include "readoutlibs/sourceemulatorconfig/Nljs.hpp"
+//#include "readoutlibs/sourceemulatorconfig/Nljs.hpp"
 #include "readoutlibs/models/SourceEmulatorModel.hpp"
+#include "appdal/DataReader.hpp"
 
 #include "fdreadoutlibs/DUNEWIBSuperChunkTypeAdapter.hpp"
 #include "fdreadoutlibs/DUNEWIBEthTypeAdapter.hpp"
@@ -55,10 +56,10 @@ FDFakeCardReader::FDFakeCardReader(const std::string& name)
 }
 
 void
-FDFakeCardReader::init(const data_t& args)
+FDFakeCardReader::init(std::shared_ptr<ModuleConfiguration> cfg)
 {
   TLOG_DEBUG(TLVL_ENTER_EXIT_METHODS) << get_name() << ": Entering init() method";
-  inherited_fcr::init(args);
+  inherited_fcr::init(cfg);
   TLOG_DEBUG(TLVL_ENTER_EXIT_METHODS) << get_name() << ": Exiting init() method";
 }
 
@@ -69,7 +70,7 @@ FDFakeCardReader::get_info(opmonlib::InfoCollector& ci, int level)
 }
 
 std::unique_ptr<readoutlibs::SourceEmulatorConcept>
-FDFakeCardReader::create_source_emulator(const appfwk::app::ConnectionReference qi, std::atomic<bool>& run_marker)
+FDFakeCardReader::create_source_emulator(string q_id, std::atomic<bool>& run_marker)
 {
   //! Values suitable to emulation
 
@@ -101,7 +102,7 @@ FDFakeCardReader::create_source_emulator(const appfwk::app::ConnectionReference 
 
   static constexpr double emu_frame_error_rate = 0.0;
 
-  auto datatypes = dunedaq::iomanager::IOManager::get()->get_datatypes(qi.uid);
+  auto datatypes = dunedaq::iomanager::IOManager::get()->get_datatypes(q_id);
   if (datatypes.size() != 1) {
     ers::error(dunedaq::readoutlibs::GenericConfigurationError(ERS_HERE,
       "Multiple output data types specified! Expected only a single type!"));
@@ -115,7 +116,7 @@ FDFakeCardReader::create_source_emulator(const appfwk::app::ConnectionReference 
     TLOG_DEBUG(TLVL_WORK_STEPS) << "Creating fake wibeth link";
     auto source_emu_model =
       std::make_unique<readoutlibs::SourceEmulatorModel<fdreadoutlibs::types::DUNEWIBEthTypeAdapter>>(
-        qi.name, run_marker, wibeth_time_tick_diff, wibeth_dropout_rate, emu_frame_error_rate, wibeth_rate_khz, wibeth_frames_per_tick);
+        q_id, run_marker, wibeth_time_tick_diff, wibeth_dropout_rate, emu_frame_error_rate, wibeth_rate_khz, wibeth_frames_per_tick);
     return source_emu_model;
   }
 
@@ -125,7 +126,7 @@ FDFakeCardReader::create_source_emulator(const appfwk::app::ConnectionReference 
 
     auto source_emu_model =
       std::make_unique<readoutlibs::SourceEmulatorModel<fdreadoutlibs::types::DUNEWIBSuperChunkTypeAdapter>>(
-        qi.name, run_marker, wib2_time_tick_diff, wib2_dropout_rate, emu_frame_error_rate, wib2_rate_khz, wib2_frames_per_tick);
+        q_id, run_marker, wib2_time_tick_diff, wib2_dropout_rate, emu_frame_error_rate, wib2_rate_khz, wib2_frames_per_tick);
     return source_emu_model;
   }
 
@@ -143,7 +144,7 @@ FDFakeCardReader::create_source_emulator(const appfwk::app::ConnectionReference 
     TLOG_DEBUG(TLVL_WORK_STEPS) << "Creating fake pds link";
     auto source_emu_model =
       std::make_unique<readoutlibs::SourceEmulatorModel<fdreadoutlibs::types::DAPHNESuperChunkTypeAdapter>>(
-        qi.name, run_marker, daphne_time_tick_diff, daphne_dropout_rate, emu_frame_error_rate, daphne_rate_khz, daphne_frames_per_tick);
+        q_id, run_marker, daphne_time_tick_diff, daphne_dropout_rate, emu_frame_error_rate, daphne_rate_khz, daphne_frames_per_tick);
     return source_emu_model;
   }
 
@@ -152,7 +153,7 @@ FDFakeCardReader::create_source_emulator(const appfwk::app::ConnectionReference 
     TLOG_DEBUG(TLVL_WORK_STEPS) << "Creating fake pds stream link";
     auto source_emu_model =
       std::make_unique<readoutlibs::SourceEmulatorModel<fdreadoutlibs::types::DAPHNEStreamSuperChunkTypeAdapter>>(
-        qi.name, run_marker, daphne_time_tick_diff, daphne_dropout_rate, emu_frame_error_rate, daphne_rate_khz, daphne_frames_per_tick);
+        q_id, run_marker, daphne_time_tick_diff, daphne_dropout_rate, emu_frame_error_rate, daphne_rate_khz, daphne_frames_per_tick);
     return source_emu_model;
   }
 
@@ -161,7 +162,7 @@ FDFakeCardReader::create_source_emulator(const appfwk::app::ConnectionReference 
     TLOG_DEBUG(TLVL_WORK_STEPS) << "Creating fake tde link";
     auto source_emu_model =
       std::make_unique<readoutlibs::SourceEmulatorModel<fdreadoutlibs::types::TDEFrameTypeAdapter>>(
-        qi.name, run_marker, tde_time_tick_diff, tde_dropout_rate, emu_frame_error_rate, tde_rate_khz, tde_frames_per_tick);
+        q_id, run_marker, tde_time_tick_diff, tde_dropout_rate, emu_frame_error_rate, tde_rate_khz, tde_frames_per_tick);
     return source_emu_model;
   }
 
