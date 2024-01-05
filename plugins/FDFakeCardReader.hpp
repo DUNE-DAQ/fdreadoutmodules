@@ -39,11 +39,11 @@ public:
   FDFakeCardReader(FDFakeCardReader&&) = delete;                 ///< FDFakeCardReader is not move-constructible
   FDFakeCardReader& operator=(FDFakeCardReader&&) = delete;      ///< FDFakeCardReader is not move-assignable
 
-  void init(std::shared_ptr<ModuleConfiguration> cfg) override;
+  void init(std::shared_ptr<appfwk::ModuleConfiguration> cfg) override;
   void get_info(opmonlib::InfoCollector& ci, int level) override;
 
   std::unique_ptr<readoutlibs::SourceEmulatorConcept>
-  create_source_emulator(string qi, std::atomic<bool>& run_marker) override;
+  create_source_emulator(std::string qi, std::atomic<bool>& run_marker) override;
 
 };
 

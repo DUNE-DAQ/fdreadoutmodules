@@ -27,7 +27,7 @@
 #include "readoutlibs/models/SkipListLatencyBufferModel.hpp"
 
 //#include "fdreadoutlibs/ProtoWIBSuperChunkTypeAdapter.hpp"
-#include "fdreadoutlibs/DUNEWIBSuperChunkTypeAdapter.hpp"
+//#include "fdreadoutlibs/DUNEWIBSuperChunkTypeAdapter.hpp"
 #include "fdreadoutlibs/DUNEWIBEthTypeAdapter.hpp"
 #include "fdreadoutlibs/DAPHNESuperChunkTypeAdapter.hpp"
 #include "fdreadoutlibs/DAPHNEStreamSuperChunkTypeAdapter.hpp"
@@ -40,7 +40,7 @@
 #include "fdreadoutlibs/daphne/DAPHNEListRequestHandler.hpp"
 #include "fdreadoutlibs/ssp/SSPFrameProcessor.hpp"
 //#include "fdreadoutlibs/wib2/SWWIB2TriggerPrimitiveProcessor.hpp"
-#include "fdreadoutlibs/wib2/WIB2FrameProcessor.hpp"
+//#include "fdreadoutlibs/wib2/WIB2FrameProcessor.hpp"
 #include "fdreadoutlibs/wibeth/WIBEthFrameProcessor.hpp"
 #include "fdreadoutlibs/tde/TDEFrameProcessor.hpp"
 //#include "fdreadoutlibs/wib/WIBFrameProcessor.hpp"
@@ -81,7 +81,7 @@ FDDataLinkHandler::FDDataLinkHandler(const std::string& name)
 }
 
 void
-FDDataLinkHandler::init(std::shared_ptr<ModuleConfiguration> cfg)
+FDDataLinkHandler::init(std::shared_ptr<appfwk::ModuleConfiguration> cfg)
 {
 
   TLOG_DEBUG(TLVL_ENTER_EXIT_METHODS) << get_name() << ": Entering init() method";
@@ -104,7 +104,7 @@ FDDataLinkHandler::create_readout(const appdal::ReadoutModule* modconf, std::ato
   
 
   // Acquire DataType  
-  std::string raw_dt = modconf->get_input_data_type();
+  std::string raw_dt = modconf->get_module_configuration()->get_input_data_type();
   TLOG() << "Choosing specializations for ReadoutModel with data_type:" << raw_dt << ']';
 
   /* IF WIB2

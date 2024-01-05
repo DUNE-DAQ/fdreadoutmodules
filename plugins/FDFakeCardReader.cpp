@@ -17,7 +17,7 @@
 #include "readoutlibs/models/SourceEmulatorModel.hpp"
 #include "appdal/DataReader.hpp"
 
-#include "fdreadoutlibs/DUNEWIBSuperChunkTypeAdapter.hpp"
+//#include "fdreadoutlibs/DUNEWIBSuperChunkTypeAdapter.hpp"
 #include "fdreadoutlibs/DUNEWIBEthTypeAdapter.hpp"
 #include "fdreadoutlibs/DAPHNESuperChunkTypeAdapter.hpp"
 #include "fdreadoutlibs/DAPHNEStreamSuperChunkTypeAdapter.hpp"
@@ -37,7 +37,7 @@ using namespace dunedaq::readoutlibs::logging;
 
 namespace dunedaq {
 
-DUNE_DAQ_TYPESTRING(dunedaq::fdreadoutlibs::types::DUNEWIBSuperChunkTypeAdapter, "WIB2Frame")
+//DUNE_DAQ_TYPESTRING(dunedaq::fdreadoutlibs::types::DUNEWIBSuperChunkTypeAdapter, "WIB2Frame")
 DUNE_DAQ_TYPESTRING(dunedaq::fdreadoutlibs::types::DUNEWIBEthTypeAdapter, "WIBEthFrame")
 DUNE_DAQ_TYPESTRING(dunedaq::fdreadoutlibs::types::DAPHNESuperChunkTypeAdapter, "PDSFrame")
 DUNE_DAQ_TYPESTRING(dunedaq::fdreadoutlibs::types::DAPHNEStreamSuperChunkTypeAdapter, "PDSStreamFrame")
@@ -56,7 +56,7 @@ FDFakeCardReader::FDFakeCardReader(const std::string& name)
 }
 
 void
-FDFakeCardReader::init(std::shared_ptr<ModuleConfiguration> cfg)
+FDFakeCardReader::init(std::shared_ptr<appfwk::ModuleConfiguration> cfg)
 {
   TLOG_DEBUG(TLVL_ENTER_EXIT_METHODS) << get_name() << ": Entering init() method";
   inherited_fcr::init(cfg);
@@ -70,7 +70,7 @@ FDFakeCardReader::get_info(opmonlib::InfoCollector& ci, int level)
 }
 
 std::unique_ptr<readoutlibs::SourceEmulatorConcept>
-FDFakeCardReader::create_source_emulator(string q_id, std::atomic<bool>& run_marker)
+FDFakeCardReader::create_source_emulator(std::string q_id, std::atomic<bool>& run_marker)
 {
   //! Values suitable to emulation
 
@@ -84,11 +84,11 @@ FDFakeCardReader::create_source_emulator(string q_id, std::atomic<bool>& run_mar
   //static constexpr double wib_dropout_rate = 0.0;
   //static constexpr double wib_rate_khz = 166.0;
   //static constexpr int wib_frames_per_tick = 1;
-
-  static constexpr int wib2_time_tick_diff = 32;
-  static constexpr double wib2_dropout_rate = 0.0;
-  static constexpr double wib2_rate_khz = 166.0;
-  static constexpr int wib2_frames_per_tick = 1;
+  
+  //static constexpr int wib2_time_tick_diff = 32;
+  //static constexpr double wib2_dropout_rate = 0.0;
+  //static constexpr double wib2_rate_khz = 166.0;
+  //static constexpr int wib2_frames_per_tick = 1;
 
   static constexpr int wibeth_time_tick_diff = 32*64;
   static constexpr double wibeth_dropout_rate = 0.0;
@@ -109,7 +109,7 @@ FDFakeCardReader::create_source_emulator(string q_id, std::atomic<bool>& run_mar
   }
   std::string raw_dt{ *datatypes.begin() };
   TLOG() << "Choosing specialization for SourceEmulator with raw_input"
-         << " [uid:" << qi.uid << " , data_type:" << raw_dt << ']';
+         << " [uid:" << q_id << " , data_type:" << raw_dt << ']';
 
   // IF WIBETH
   if (raw_dt.find("WIBEthFrame") != std::string::npos) {
@@ -120,7 +120,7 @@ FDFakeCardReader::create_source_emulator(string q_id, std::atomic<bool>& run_mar
     return source_emu_model;
   }
 
-  // IF WIB2
+  /* IF WIB2
   if (raw_dt.find("WIB2Frame") != std::string::npos) {
     TLOG_DEBUG(TLVL_WORK_STEPS) << "Creating fake wib2 link";
 
@@ -129,7 +129,7 @@ FDFakeCardReader::create_source_emulator(string q_id, std::atomic<bool>& run_mar
         q_id, run_marker, wib2_time_tick_diff, wib2_dropout_rate, emu_frame_error_rate, wib2_rate_khz, wib2_frames_per_tick);
     return source_emu_model;
   }
-
+  */
   /* IF WIB
   if (raw_dt.find("WIBFrame") != std::string::npos) {
     TLOG_DEBUG(TLVL_WORK_STEPS) << "Creating fake wib link";
