@@ -33,7 +33,6 @@
 #include "fdreadoutlibs/DAPHNEStreamSuperChunkTypeAdapter.hpp"
 #include "fdreadoutlibs/SSPFrameTypeAdapter.hpp"
 #include "fdreadoutlibs/TDEFrameTypeAdapter.hpp"
-#include "fdreadoutlibs/TriggerPrimitiveTypeAdapter.hpp"
 
 #include "fdreadoutlibs/daphne/DAPHNEFrameProcessor.hpp"
 #include "fdreadoutlibs/daphne/DAPHNEStreamFrameProcessor.hpp"
@@ -44,7 +43,6 @@
 #include "fdreadoutlibs/wibeth/WIBEthFrameProcessor.hpp"
 #include "fdreadoutlibs/tde/TDEFrameProcessor.hpp"
 //#include "fdreadoutlibs/wib/WIBFrameProcessor.hpp"
-#include "fdreadoutlibs/TPCTPReadoutModel.hpp"
 
 #include <memory>
 #include <sstream>
@@ -62,7 +60,7 @@ DUNE_DAQ_TYPESTRING(dunedaq::fdreadoutlibs::types::DAPHNESuperChunkTypeAdapter, 
 DUNE_DAQ_TYPESTRING(dunedaq::fdreadoutlibs::types::DAPHNEStreamSuperChunkTypeAdapter, "PDSStreamFrame")
 DUNE_DAQ_TYPESTRING(dunedaq::fdreadoutlibs::types::SSPFrameTypeAdapter, "SSPFrame")
 DUNE_DAQ_TYPESTRING(dunedaq::fdreadoutlibs::types::TDEFrameTypeAdapter, "TDEFrame")
-DUNE_DAQ_TYPESTRING(dunedaq::fdreadoutlibs::types::TriggerPrimitiveTypeAdapter, "TriggerPrimitive")
+//DUNE_DAQ_TYPESTRING(dunedaq::fdreadoutlibs::types::TriggerPrimitiveTypeAdapter, "TriggerPrimitive")
 //DUNE_DAQ_TYPESTRING(dunedaq::fdreadoutlibs::types::DUNEWIBFirmwareTriggerPrimitiveSuperChunkTypeAdapter, "FWTriggerPrimitive")
 
 namespace fdreadoutmodules {
@@ -178,20 +176,6 @@ FDDataLinkHandler::create_readout(const appdal::ReadoutModule* modconf, std::ato
                         rol::DefaultSkipListRequestHandler<fdt::TDEFrameTypeAdapter>,
                         rol::SkipListLatencyBufferModel<fdt::TDEFrameTypeAdapter>,
                         fdl::TDEFrameProcessor>>(run_marker);
-    readout_model->init(modconf);
-    return readout_model;
-  }
-
-  // IF TriggerPrimitive (TPG)
-  if (raw_dt.find("TriggerPrimitive") != std::string::npos) {
-    TLOG(TLVL_WORK_STEPS) << "Creating readout for TriggerPrimitive";
-    /*auto readout_model = std::make_unique<rol::ReadoutModel<
-      fdt::TriggerPrimitiveTypeAdapter,
-      fdl::TPCTPRequestHandler,
-      rol::SkipListLatencyBufferModel<fdt::TriggerPrimitiveTypeAdapter>,
-      rol::TaskRawDataProcessorModel<fdt::TriggerPrimitiveTypeAdapter>>>(run_marker);
-    */
-    auto readout_model = std::make_unique<fdl::TPCTPReadoutModel>(run_marker);
     readout_model->init(modconf);
     return readout_model;
   }
