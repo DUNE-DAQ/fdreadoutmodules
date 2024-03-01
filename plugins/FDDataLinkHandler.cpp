@@ -34,7 +34,7 @@
 #include "fdreadoutlibs/SSPFrameTypeAdapter.hpp"
 #include "fdreadoutlibs/TDEFrameTypeAdapter.hpp"
 #include "fdreadoutlibs/TriggerPrimitiveTypeAdapter.hpp"
-#include "fdreadoutlibs/CRTFixedSizeTypeAdapter.hpp"
+#include "fdreadoutlibs/CRTTypeAdapter.hpp"
 
 #include "fdreadoutlibs/daphne/DAPHNEFrameProcessor.hpp"
 #include "fdreadoutlibs/daphne/DAPHNEStreamFrameProcessor.hpp"
@@ -45,7 +45,7 @@
 #include "fdreadoutlibs/TPCTPRequestHandler.hpp"
 #include "fdreadoutlibs/wibeth/WIBEthFrameProcessor.hpp"
 #include "fdreadoutlibs/tde/TDEFrameProcessor.hpp"
-#include "fdreadoutlibs/crt/CRTFixedSizeFrameProcessor.hpp"
+#include "fdreadoutlibs/crt/CRTFrameProcessor.hpp"
 //#include "fdreadoutlibs/wib/WIBFrameProcessor.hpp"
 
 #include <memory>
@@ -64,7 +64,7 @@ DUNE_DAQ_TYPESTRING(dunedaq::fdreadoutlibs::types::DAPHNESuperChunkTypeAdapter, 
 DUNE_DAQ_TYPESTRING(dunedaq::fdreadoutlibs::types::DAPHNEStreamSuperChunkTypeAdapter, "PDSStreamFrame")
 DUNE_DAQ_TYPESTRING(dunedaq::fdreadoutlibs::types::SSPFrameTypeAdapter, "SSPFrame")
 DUNE_DAQ_TYPESTRING(dunedaq::fdreadoutlibs::types::TDEFrameTypeAdapter, "TDEFrame")
-DUNE_DAQ_TYPESTRING(dunedaq::fdreadoutlibs::types::CRTFixedSizeTypeAdapter, "CRTFrame")
+DUNE_DAQ_TYPESTRING(dunedaq::fdreadoutlibs::types::CRTTypeAdapter, "CRTFrame")
 DUNE_DAQ_TYPESTRING(dunedaq::fdreadoutlibs::types::TriggerPrimitiveTypeAdapter, "TriggerPrimitive")
 //DUNE_DAQ_TYPESTRING(dunedaq::fdreadoutlibs::types::DUNEWIBFirmwareTriggerPrimitiveSuperChunkTypeAdapter, "FWTriggerPrimitive")
 
@@ -250,11 +250,11 @@ FDDataLinkHandler::create_readout(const nlohmann::json& args, std::atomic<bool>&
   if (raw_dt.find("CRTFrame") != std::string::npos) {
     TLOG_DEBUG(TLVL_WORK_STEPS) << "Creating readout for a CRT";
     auto readout_model = std::make_unique<
-      rol::ReadoutModel<fdt::CRTFixedSizeTypeAdapter,
-			rol::ZeroCopyRecordingRequestHandlerModel<fdt::CRTFixedSizeTypeAdapter,
-                                                        rol::FixedRateQueueModel<fdt::CRTFixedSizeTypeAdapter>>,
-                        rol::FixedRateQueueModel<fdt::CRTFixedSizeTypeAdapter>,
-                        fdl::CRTFixedSizeFrameProcessor>>(run_marker);
+      rol::ReadoutModel<fdt::CRTTypeAdapter,
+			rol::ZeroCopyRecordingRequestHandlerModel<fdt::CRTTypeAdapter,
+                                                        rol::FixedRateQueueModel<fdt::CRTTypeAdapter>>,
+                        rol::FixedRateQueueModel<fdt::CRTTypeAdapter>,
+                        fdl::CRTFrameProcessor>>(run_marker);
     readout_model->init(args);
     return readout_model;
   }

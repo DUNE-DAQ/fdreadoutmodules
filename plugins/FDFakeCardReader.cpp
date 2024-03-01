@@ -21,7 +21,7 @@
 #include "fdreadoutlibs/DAPHNESuperChunkTypeAdapter.hpp"
 #include "fdreadoutlibs/DAPHNEStreamSuperChunkTypeAdapter.hpp"
 #include "fdreadoutlibs/TDEFrameTypeAdapter.hpp"
-#include "fdreadoutlibs/CRTFixedSizeTypeAdapter.hpp"
+#include "fdreadoutlibs/CRTTypeAdapter.hpp"
 
 #include <chrono>
 #include <fstream>
@@ -42,7 +42,7 @@ DUNE_DAQ_TYPESTRING(dunedaq::fdreadoutlibs::types::DUNEWIBEthTypeAdapter, "WIBEt
 DUNE_DAQ_TYPESTRING(dunedaq::fdreadoutlibs::types::DAPHNESuperChunkTypeAdapter, "PDSFrame")
 DUNE_DAQ_TYPESTRING(dunedaq::fdreadoutlibs::types::DAPHNEStreamSuperChunkTypeAdapter, "PDSStreamFrame")
 DUNE_DAQ_TYPESTRING(dunedaq::fdreadoutlibs::types::TDEFrameTypeAdapter, "TDEFrame")
-DUNE_DAQ_TYPESTRING(dunedaq::fdreadoutlibs::types::CRTFixedSizeTypeAdapter, "CRTFrame")
+DUNE_DAQ_TYPESTRING(dunedaq::fdreadoutlibs::types::CRTTypeAdapter, "CRTFrame")
 
 namespace fdreadoutmodules {
 
@@ -176,7 +176,7 @@ FDFakeCardReader::create_source_emulator(const appfwk::app::ConnectionReference 
   if (raw_dt.find("CRTFrame") != std::string::npos) {
     TLOG_DEBUG(TLVL_WORK_STEPS) << "Creating fake crt link";
     auto source_emu_model =
-      std::make_unique<readoutlibs::SourceEmulatorModel<fdreadoutlibs::types::CRTFixedSizeTypeAdapter>>(
+      std::make_unique<readoutlibs::SourceEmulatorModel<fdreadoutlibs::types::CRTTypeAdapter>>(
         qi.name, run_marker, crt_time_tick_diff, crt_dropout_rate, emu_frame_error_rate, crt_rate_khz, crt_frames_per_tick);
     return source_emu_model;
   }
