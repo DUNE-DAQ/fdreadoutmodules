@@ -8,9 +8,9 @@
 #ifndef FDREADOUTMODULES_PLUGINS_FDDATALINKHANDLER_HPP_
 #define FDREADOUTMODULES_PLUGINS_FDDATALINKHANDLER_HPP_
 
-#include "appfwk/cmd/Nljs.hpp"
-#include "appfwk/app/Nljs.hpp"
-#include "appfwk/cmd/Structs.hpp"
+//#include "appfwk/cmd/Nljs.hpp"
+//#include "appfwk/app/Nljs.hpp"
+//#include "appfwk/cmd/Structs.hpp"
 #include "appfwk/DAQModule.hpp"
 
 #include "readoutmodules/DataLinkHandlerBase.hpp"
@@ -37,11 +37,11 @@ public:
   FDDataLinkHandler(FDDataLinkHandler&&) = delete;                 ///< FDDataLinkHandler is not move-constructible
   FDDataLinkHandler& operator=(FDDataLinkHandler&&) = delete;      ///< FDDataLinkHandler is not move-assignable
 
-  void init(const data_t& args) override;
+  void init(std::shared_ptr<appfwk::ModuleConfiguration> cfg) override;
   void get_info(opmonlib::InfoCollector& ci, int level) override;
 
   std::unique_ptr<readoutlibs::ReadoutConcept>
-  create_readout(const nlohmann::json& args, std::atomic<bool>& run_marker) override;
+  create_readout(const appdal::ReadoutModule* modconf, std::atomic<bool>& run_marker) override;
 
 };
 
