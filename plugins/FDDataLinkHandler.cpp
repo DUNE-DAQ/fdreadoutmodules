@@ -171,12 +171,13 @@ FDDataLinkHandler::create_readout(const nlohmann::json& args, std::atomic<bool>&
   // IF WIBEth
   if (raw_dt.find("WIBEthFrame") != std::string::npos) {
     TLOG_DEBUG(TLVL_WORK_STEPS) << "Creating readout for an Ethernet DUNE-WIB";
+    auto callback_mode = true;
     auto readout_model = std::make_unique<
       rol::ReadoutModel<fdt::DUNEWIBEthTypeAdapter,
 			rol::ZeroCopyRecordingRequestHandlerModel<fdt::DUNEWIBEthTypeAdapter,
                                                         rol::FixedRateQueueModel<fdt::DUNEWIBEthTypeAdapter>>,
                         rol::FixedRateQueueModel<fdt::DUNEWIBEthTypeAdapter>,
-                        fdl::WIBEthFrameProcessor>>(run_marker);
+                        fdl::WIBEthFrameProcessor>>(run_marker, callback_mode);
     readout_model->init(args);
     return readout_model;
   }
