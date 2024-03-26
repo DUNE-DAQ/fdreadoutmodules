@@ -1,7 +1,7 @@
 /* Author: Matthew Strait <mstrait@fnal.gov> */
 
-#include "/nfs/home/madmurph/crtinterface/CRTInterface.hh"
-#include "/nfs/home/madmurph/crtinterface/CRTdecode.hh"
+#include "fdreadoutmodules/CRTInterface.hh"
+#include "fdreadoutmodules/CRTdecode.hh"
 #include "logging/Logging.hpp"
 //#define TRACE_NAME "CRTInterface"
 //#include "artdaq/DAQdata/Globals.hh"
@@ -548,7 +548,7 @@ void CRTInterface::SetBaselines()
         // that started up the backend. We'll just wait for the backend to
         // finish starting and the file to appear.
         //TLOG(TLVL_DEBUG, "CRTInterface")
-	std::cout << "Waiting for baseline file to appear\n";
+	std::cout << "Waiting for baseline file to appear at " << indir << "\n";
         sleep(1);
       }
       else{

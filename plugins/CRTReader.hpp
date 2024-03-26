@@ -11,6 +11,8 @@
 #ifndef FDREADOUTMODULES_PLUGINS_CRTREADER_HPP_
 #define FDREADOUTMODULES_PLUGINS_CRTREADER_HPP_
 
+#include "fdreadoutmodules/crtreader/Nljs.hpp"
+
 #include "fdreadoutmodules/CRTInterface.hh"
 #include "fdreadoutmodules/CRTdecode.hh"
 
@@ -54,6 +56,8 @@ private:
   // Commands
   void do_start(const nlohmann::json& obj);
   void do_stop(const nlohmann::json& obj);
+  void do_conf(const nlohmann::json& obj);
+  void do_scrap(const nlohmann::json& obj);
 
   // Threading
   dunedaq::utilities::WorkerThread thread_;
@@ -65,8 +69,9 @@ private:
   std::shared_ptr<sink_t> outputQueue_;
   std::chrono::milliseconds queueTimeout_;
 
-  CRTInterface* hardware_interface_;
+  std::unique_ptr<CRTInterface> hardware_interface_;
   char* readout_buffer_;
+  crtreader::Conf cfg_;
 };
 } // namespace fdreadoutmodules
 } // namespace dunedaq
