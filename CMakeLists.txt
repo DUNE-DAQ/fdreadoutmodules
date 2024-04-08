@@ -28,8 +28,6 @@ find_package(Boost COMPONENTS unit_test_framework REQUIRED)
 
 # See https://dune-daq-sw.readthedocs.io/en/latest/packages/daq-cmake/#daq_codegen
 
-daq_codegen(crtreader.jsonnet TEMPLATES Structs.hpp.j2 Nljs.hpp.j2)
-
 daq_codegen(dummymodule.jsonnet TEMPLATES Structs.hpp.j2 Nljs.hpp.j2)
 daq_codegen(dummymoduleinfo.jsonnet DEP_PKGS opmonlib TEMPLATES opmonlib/InfoStructs.hpp.j2 opmonlib/InfoNljs.hpp.j2)
 
@@ -57,7 +55,7 @@ endif()
 
 # See https://dune-daq-sw.readthedocs.io/en/latest/packages/daq-cmake/#daq_add_library
 
-daq_add_library( *.cc LINK_LIBRARIES ${FDREADOUTMODULES_DEPENDENCIES} ) # Any source files and/or dependent libraries to link in not yet determined
+daq_add_library( LINK_LIBRARIES ${FDREADOUTMODULES_DEPENDENCIES} ) # Any source files and/or dependent libraries to link in not yet determined
 
 ##############################################################################
 
@@ -80,8 +78,6 @@ daq_add_plugin(TimeSyncConsumer duneDAQModule LINK_LIBRARIES appfwk::appfwk read
 
 daq_add_plugin(FDDataLinkHandler duneDAQModule LINK_LIBRARIES appfwk::appfwk readoutmodules::readoutmodules fdreadoutlibs::fdreadoutlibs)
 daq_add_plugin(FDFakeCardReader duneDAQModule LINK_LIBRARIES appfwk::appfwk readoutmodules::readoutmodules fdreadoutlibs::fdreadoutlibs)
-
-daq_add_plugin(CRTReader duneDAQModule LINK_LIBRARIES fdreadoutmodules appfwk::appfwk fdreadoutlibs::fdreadoutlibs readoutmodules::readoutmodules)
 
 ##############################################################################
 
