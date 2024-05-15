@@ -251,9 +251,8 @@ FDDataLinkHandler::create_readout(const nlohmann::json& args, std::atomic<bool>&
     TLOG_DEBUG(TLVL_WORK_STEPS) << "Creating readout for a CRT";
     auto readout_model = std::make_unique<
       rol::ReadoutModel<fdt::CRTTypeAdapter,
-			rol::ZeroCopyRecordingRequestHandlerModel<fdt::CRTTypeAdapter,
-                                                        rol::FixedRateQueueModel<fdt::CRTTypeAdapter>>,
-                        rol::FixedRateQueueModel<fdt::CRTTypeAdapter>,
+                        rol::DefaultSkipListRequestHandler<fdt::CRTTypeAdapter>,
+                        rol::SkipListLatencyBufferModel<fdt::CRTTypeAdapter>,
                         fdl::CRTFrameProcessor>>(run_marker);
     readout_model->init(args);
     return readout_model;
