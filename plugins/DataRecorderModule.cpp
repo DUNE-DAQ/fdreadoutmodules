@@ -1,5 +1,5 @@
 /**
- * @file DataRecorder.cpp DataRecorder implementation
+ * @file DataRecorderModule.cpp DataRecorderModule implementation
  *
  * This is part of the DUNE DAQ , copyright 2020.
  * Licensing/copyright details are in the COPYING file that you should have
@@ -21,7 +21,7 @@
 #include "readoutlibs/recorderconfig/Structs.hpp"
 #include "readoutlibs/recorderinfo/InfoNljs.hpp"
 
-#include "DataRecorder.hpp"
+#include "DataRecorderModule.hpp"
 #include "appfwk/DAQModuleHelper.hpp"
 
 #include "appfwk/cmd/Nljs.hpp"
@@ -34,17 +34,17 @@ using namespace dunedaq::readoutlibs::logging;
 namespace dunedaq {
 namespace fdreadoutmodules {
 
-DataRecorder::DataRecorder(const std::string& name)
+DataRecorderModule::DataRecorderModule(const std::string& name)
   : DAQModule(name)
 {
-  register_command("conf", &DataRecorder::do_conf);
-  register_command("scrap", &DataRecorder::do_scrap);
-  register_command("start", &DataRecorder::do_start);
-  register_command("stop_trigger_sources", &DataRecorder::do_stop);
+  register_command("conf", &DataRecorderModule::do_conf);
+  register_command("scrap", &DataRecorderModule::do_scrap);
+  register_command("start", &DataRecorderModule::do_start);
+  register_command("stop_trigger_sources", &DataRecorderModule::do_stop);
 }
 
 void
-DataRecorder::init(const data_t& args)
+DataRecorderModule::init(const data_t& args)
 {
   try {
     // Acquire input connection and its DataType
@@ -117,39 +117,39 @@ DataRecorder::init(const data_t& args)
       return;
     }
 
-    throw readoutlibs::DataRecorderConfigurationError(ERS_HERE, "Could not create DataRecorder of type " + raw_dt);
+    throw readoutlibs::DataRecorderConfigurationError(ERS_HERE, "Could not create DataRecorderModule of type " + raw_dt);
 
   } catch (const ers::Issue& excpt) {
-    throw readoutlibs::DataRecorderResourceQueueError(ERS_HERE, "Could not initialize queue", "raw_recording", "");
+    throw readoutlibs::DataRecorderModuleResourceQueueError(ERS_HERE, "Could not initialize queue", "raw_recording", "");
   }
 }
 
 void
-DataRecorder::get_info(opmonlib::InfoCollector& ci, int level)
+DataRecorderModule::get_info(opmonlib::InfoCollector& ci, int level)
 {
   recorder->get_info(ci, level);
 }
 
 void
-DataRecorder::do_conf(const data_t& args)
+DataRecorderModule::do_conf(const data_t& args)
 {
   recorder->do_conf(args);
 }
 
 void
-DataRecorder::do_scrap(const data_t& args)
+DataRecorderModule::do_scrap(const data_t& args)
 {
   recorder->do_scrap(args);
 }
 
 void
-DataRecorder::do_start(const data_t& args)
+DataRecorderModule::do_start(const data_t& args)
 {
   recorder->do_start(args);
 }
 
 void
-DataRecorder::do_stop(const data_t& args)
+DataRecorderModule::do_stop(const data_t& args)
 {
   recorder->do_stop(args);
 }
@@ -157,4 +157,4 @@ DataRecorder::do_stop(const data_t& args)
 } // namespace fdreadoutmodules
 } // namespace dunedaq
 
-DEFINE_DUNE_DAQ_MODULE(dunedaq::fdreadoutmodules::DataRecorder)
+DEFINE_DUNE_DAQ_MODULE(dunedaq::fdreadoutmodules::DataRecorderModule)

@@ -1,11 +1,11 @@
 /**
- * @file FDDataLinkHandler.cpp FDDataLinkHandler class implementation
+ * @file FDDataHandlerModule.cpp FDDataHandlerModule class implementation
  *
  * This is part of the DUNE DAQ , copyright 2020.
  * Licensing/copyright details are in the COPYING file that you should have
  * received with this code.
  */
-#include "FDDataLinkHandler.hpp"
+#include "FDDataHandlerModule.hpp"
 
 //#include "appfwk/cmd/Nljs.hpp"
 //#include "appfwk/app/Nljs.hpp"
@@ -65,7 +65,7 @@ DUNE_DAQ_TYPESTRING(dunedaq::fdreadoutlibs::types::TDEFrameTypeAdapter, "TDEFram
 
 namespace fdreadoutmodules {
 
-FDDataLinkHandler::FDDataLinkHandler(const std::string& name)
+FDDataHandlerModule::FDDataHandlerModule(const std::string& name)
   : DAQModule(name)
   , DataLinkHandlerBase(name)
 { 
@@ -79,7 +79,7 @@ FDDataLinkHandler::FDDataLinkHandler(const std::string& name)
 }
 
 void
-FDDataLinkHandler::init(std::shared_ptr<appfwk::ModuleConfiguration> cfg)
+FDDataHandlerModule::init(std::shared_ptr<appfwk::ModuleConfiguration> cfg)
 {
 
   TLOG_DEBUG(TLVL_ENTER_EXIT_METHODS) << get_name() << ": Entering init() method";
@@ -88,13 +88,13 @@ FDDataLinkHandler::init(std::shared_ptr<appfwk::ModuleConfiguration> cfg)
 }
 
 void
-FDDataLinkHandler::get_info(opmonlib::InfoCollector& ci, int level)
+FDDataHandlerModule::get_info(opmonlib::InfoCollector& ci, int level)
 {
   inherited_dlh::get_info(ci, level);
 }
 
 std::unique_ptr<readoutlibs::ReadoutConcept>
-FDDataLinkHandler::create_readout(const appmodel::ReadoutModule* modconf, std::atomic<bool>& run_marker)
+FDDataHandlerModule::create_readout(const appmodel::DataHandlerModule* modconf, std::atomic<bool>& run_marker)
 {
   namespace rol = dunedaq::readoutlibs;
   namespace fdl = dunedaq::fdreadoutlibs;
@@ -186,4 +186,4 @@ FDDataLinkHandler::create_readout(const appmodel::ReadoutModule* modconf, std::a
 } // namespace fdreadoutmodules
 } // namespace dunedaq
 
-DEFINE_DUNE_DAQ_MODULE(dunedaq::fdreadoutmodules::FDDataLinkHandler)
+DEFINE_DUNE_DAQ_MODULE(dunedaq::fdreadoutmodules::FDDataHandlerModule)
