@@ -1,5 +1,5 @@
 /**
- * @file DataRecorder.hpp Module to record data
+ * @file DataRecorderModule.hpp Module to record data
  *
  * This is part of the DUNE DAQ , copyright 2020.
  * Licensing/copyright details are in the COPYING file that you should have
@@ -26,15 +26,15 @@
 namespace dunedaq {
 namespace fdreadoutmodules {
 
-class DataRecorder : public dunedaq::appfwk::DAQModule
+class DataRecorderModule : public dunedaq::appfwk::DAQModule
 {
 public:
-  explicit DataRecorder(const std::string& name);
+  explicit DataRecorderModule(const std::string& name);
 
-  DataRecorder(const DataRecorder&) = delete;
-  DataRecorder& operator=(const DataRecorder&) = delete;
-  DataRecorder(DataRecorder&&) = delete;
-  DataRecorder& operator=(DataRecorder&&) = delete;
+  DataRecorderModule(const DataRecorderModule&) = delete;
+  DataRecorderModule& operator=(const DataRecorderModule&) = delete;
+  DataRecorderModule(DataRecorderModule&&) = delete;
+  DataRecorderModule& operator=(DataRecorderModule&&) = delete;
 
   void init(const nlohmann::json& obj) override;
   void get_info(opmonlib::InfoCollector& ci, int level) override;

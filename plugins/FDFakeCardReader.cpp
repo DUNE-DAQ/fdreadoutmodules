@@ -15,7 +15,7 @@
 #include "readoutlibs/ReadoutIssues.hpp"
 //#include "readoutlibs/sourceemulatorconfig/Nljs.hpp"
 #include "readoutlibs/models/SourceEmulatorModel.hpp"
-#include "appmodel/DataReader.hpp"
+#include "appmodel/DataReceiverModule.hpp"
 
 //#include "fdreadoutlibs/DUNEWIBSuperChunkTypeAdapter.hpp"
 #include "fdreadoutlibs/DUNEWIBEthTypeAdapter.hpp"
