@@ -1,5 +1,5 @@
 /**
- * @file FDFakeCardReaderModule.hpp FarDetector FakeCardReader
+ * @file FDFakeReaderModule.hpp FarDetector FakeCardReader
  *
  * This is part of the DUNE DAQ , copyright 2020.
  * Licensing/copyright details are in the COPYING file that you should have
@@ -22,22 +22,22 @@
 namespace dunedaq {
 namespace fdreadoutmodules {
 
-class FDFakeCardReaderModule : public dunedaq::appfwk::DAQModule,
+class FDFakeReaderModule : public dunedaq::appfwk::DAQModule,
                          public dunedaq::readoutmodules::FakeCardReaderBase
 {
 public:
   using inherited_fcr = dunedaq::readoutmodules::FakeCardReaderBase;
   using inherited_mod = dunedaq::appfwk::DAQModule;
   /**
-   * @brief FDFakeCardReaderModule Constructor
-   * @param name Instance name for this FDFakeCardReaderModule instance
+   * @brief FDFakeReaderModule Constructor
+   * @param name Instance name for this FDFakeReaderModule instance
    */
-  explicit FDFakeCardReaderModule(const std::string& name);
+  explicit FDFakeReaderModule(const std::string& name);
 
-  FDFakeCardReaderModule(const FDFakeCardReaderModule&) = delete;            ///< FDFakeCardReaderModule is not copy-constructible
-  FDFakeCardReaderModule& operator=(const FDFakeCardReaderModule&) = delete; ///< FDFakeCardReaderModule is not copy-assignable
-  FDFakeCardReaderModule(FDFakeCardReaderModule&&) = delete;                 ///< FDFakeCardReaderModule is not move-constructible
-  FDFakeCardReaderModule& operator=(FDFakeCardReaderModule&&) = delete;      ///< FDFakeCardReaderModule is not move-assignable
+  FDFakeReaderModule(const FDFakeReaderModule&) = delete;            ///< FDFakeReaderModule is not copy-constructible
+  FDFakeReaderModule& operator=(const FDFakeReaderModule&) = delete; ///< FDFakeReaderModule is not copy-assignable
+  FDFakeReaderModule(FDFakeReaderModule&&) = delete;                 ///< FDFakeReaderModule is not move-constructible
+  FDFakeReaderModule& operator=(FDFakeReaderModule&&) = delete;      ///< FDFakeReaderModule is not move-assignable
 
   void init(std::shared_ptr<appfwk::ModuleConfiguration> cfg) override;
   void get_info(opmonlib::InfoCollector& ci, int level) override;

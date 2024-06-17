@@ -1,11 +1,11 @@
 /**
- * @file FDFakeCardReaderModule.cpp FDFakeCardReaderModule class implementation
+ * @file FDFakeReaderModule.cpp FDFakeReaderModule class implementation
  *
  * This is part of the DUNE DAQ , copyright 2020.
  * Licensing/copyright details are in the COPYING file that you should have
  * received with this code.
  */
-#include "FDFakeCardReaderModule.hpp"
+#include "FDFakeReaderModule.hpp"
 
 //#include "appfwk/app/Nljs.hpp"
 //#include "appfwk/cmd/Nljs.hpp"
@@ -45,7 +45,7 @@ DUNE_DAQ_TYPESTRING(dunedaq::fdreadoutlibs::types::TDEFrameTypeAdapter, "TDEFram
 
 namespace fdreadoutmodules {
 
-FDFakeCardReaderModule::FDFakeCardReaderModule(const std::string& name)
+FDFakeReaderModule::FDFakeReaderModule(const std::string& name)
   : DAQModule(name)
   , FakeCardReaderBase(name)
 {
@@ -56,7 +56,7 @@ FDFakeCardReaderModule::FDFakeCardReaderModule(const std::string& name)
 }
 
 void
-FDFakeCardReaderModule::init(std::shared_ptr<appfwk::ModuleConfiguration> cfg)
+FDFakeReaderModule::init(std::shared_ptr<appfwk::ModuleConfiguration> cfg)
 {
   TLOG_DEBUG(TLVL_ENTER_EXIT_METHODS) << get_name() << ": Entering init() method";
   inherited_fcr::init(cfg);
@@ -64,13 +64,13 @@ FDFakeCardReaderModule::init(std::shared_ptr<appfwk::ModuleConfiguration> cfg)
 }
 
 void
-FDFakeCardReaderModule::get_info(opmonlib::InfoCollector& ci, int level)
+FDFakeReaderModule::get_info(opmonlib::InfoCollector& ci, int level)
 {
   inherited_fcr::get_info(ci, level);
 }
 
 std::unique_ptr<readoutlibs::SourceEmulatorConcept>
-FDFakeCardReaderModule::create_source_emulator(std::string q_id, std::atomic<bool>& run_marker)
+FDFakeReaderModule::create_source_emulator(std::string q_id, std::atomic<bool>& run_marker)
 {
   //! Values suitable to emulation
 
@@ -172,4 +172,4 @@ FDFakeCardReaderModule::create_source_emulator(std::string q_id, std::atomic<boo
 } // namespace fdreadoutmodules
 } // namespace dunedaq
 
-DEFINE_DUNE_DAQ_MODULE(dunedaq::fdreadoutmodules::FDFakeCardReaderModule)
+DEFINE_DUNE_DAQ_MODULE(dunedaq::fdreadoutmodules::FDFakeReaderModule)
