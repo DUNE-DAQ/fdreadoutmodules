@@ -1,11 +1,11 @@
 /**
- * @file FDFakeCardReader.cpp FDFakeCardReader class implementation
+ * @file FDFakeReaderModule.cpp FDFakeReaderModule class implementation
  *
  * This is part of the DUNE DAQ , copyright 2020.
  * Licensing/copyright details are in the COPYING file that you should have
  * received with this code.
  */
-#include "FDFakeCardReader.hpp"
+#include "FDFakeReaderModule.hpp"
 
 //#include "appfwk/app/Nljs.hpp"
 //#include "appfwk/cmd/Nljs.hpp"
@@ -15,7 +15,7 @@
 #include "readoutlibs/ReadoutIssues.hpp"
 //#include "readoutlibs/sourceemulatorconfig/Nljs.hpp"
 #include "readoutlibs/models/SourceEmulatorModel.hpp"
-#include "appmodel/DataReceiverModule.hpp"
+#include "appmodel/DataReaderModule.hpp"
 
 //#include "fdreadoutlibs/DUNEWIBSuperChunkTypeAdapter.hpp"
 #include "fdreadoutlibs/DUNEWIBEthTypeAdapter.hpp"
@@ -45,7 +45,7 @@ DUNE_DAQ_TYPESTRING(dunedaq::fdreadoutlibs::types::TDEFrameTypeAdapter, "TDEFram
 
 namespace fdreadoutmodules {
 
-FDFakeCardReader::FDFakeCardReader(const std::string& name)
+FDFakeReaderModule::FDFakeReaderModule(const std::string& name)
   : DAQModule(name)
   , FakeCardReaderBase(name)
 {
@@ -56,7 +56,7 @@ FDFakeCardReader::FDFakeCardReader(const std::string& name)
 }
 
 void
-FDFakeCardReader::init(std::shared_ptr<appfwk::ModuleConfiguration> cfg)
+FDFakeReaderModule::init(std::shared_ptr<appfwk::ModuleConfiguration> cfg)
 {
   TLOG_DEBUG(TLVL_ENTER_EXIT_METHODS) << get_name() << ": Entering init() method";
   inherited_fcr::init(cfg);
@@ -64,13 +64,13 @@ FDFakeCardReader::init(std::shared_ptr<appfwk::ModuleConfiguration> cfg)
 }
 
 void
-FDFakeCardReader::get_info(opmonlib::InfoCollector& ci, int level)
+FDFakeReaderModule::get_info(opmonlib::InfoCollector& ci, int level)
 {
   inherited_fcr::get_info(ci, level);
 }
 
 std::unique_ptr<readoutlibs::SourceEmulatorConcept>
-FDFakeCardReader::create_source_emulator(std::string q_id, std::atomic<bool>& run_marker)
+FDFakeReaderModule::create_source_emulator(std::string q_id, std::atomic<bool>& run_marker)
 {
   //! Values suitable to emulation
 
@@ -172,4 +172,4 @@ FDFakeCardReader::create_source_emulator(std::string q_id, std::atomic<bool>& ru
 } // namespace fdreadoutmodules
 } // namespace dunedaq
 
-DEFINE_DUNE_DAQ_MODULE(dunedaq::fdreadoutmodules::FDFakeCardReader)
+DEFINE_DUNE_DAQ_MODULE(dunedaq::fdreadoutmodules::FDFakeReaderModule)
