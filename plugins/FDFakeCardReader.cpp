@@ -73,7 +73,7 @@ FDFakeCardReader::create_source_emulator(const appfwk::app::ConnectionReference 
 {
   //! Values suitable to emulation
 
-  static constexpr int daphne_time_tick_diff = 16;
+  static constexpr int daphne_time_tick_diff = 64;
   static constexpr double daphne_dropout_rate = 0.9;
   static constexpr double daphne_rate_khz = 200.0;
   static constexpr int daphne_frames_per_tick = 1;
