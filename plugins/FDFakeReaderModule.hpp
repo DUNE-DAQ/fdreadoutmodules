@@ -15,7 +15,7 @@
 #include "appfwk/DAQModule.hpp"
 #include "appfwk/ModuleConfiguration.hpp"
 
-#include "readoutmodules/FakeCardReaderBase.hpp"
+#include "datahandlinglibs/FakeCardReaderBase.hpp"
 
 #include <string>
 
@@ -23,10 +23,10 @@ namespace dunedaq {
 namespace fdreadoutmodules {
 
 class FDFakeReaderModule : public dunedaq::appfwk::DAQModule,
-                         public dunedaq::readoutmodules::FakeCardReaderBase
+                         public dunedaq::datahandlinglibs::FakeCardReaderBase
 {
 public:
-  using inherited_fcr = dunedaq::readoutmodules::FakeCardReaderBase;
+  using inherited_fcr = dunedaq::datahandlinglibs::FakeCardReaderBase;
   using inherited_mod = dunedaq::appfwk::DAQModule;
   /**
    * @brief FDFakeReaderModule Constructor
@@ -42,7 +42,7 @@ public:
   void init(std::shared_ptr<appfwk::ModuleConfiguration> cfg) override;
   void get_info(opmonlib::InfoCollector& ci, int level) override;
 
-  std::unique_ptr<readoutlibs::SourceEmulatorConcept>
+  std::unique_ptr<datahandlinglibs::SourceEmulatorConcept>
   create_source_emulator(std::string qi, std::atomic<bool>& run_marker) override;
 
 };

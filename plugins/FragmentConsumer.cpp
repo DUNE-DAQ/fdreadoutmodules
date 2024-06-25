@@ -9,7 +9,7 @@
 #ifndef FDREADOUTMODULES_PLUGINS_FRAGMENTCONSUMER_HPP_
 #define FDREADOUTMODULES_PLUGINS_FRAGMENTCONSUMER_HPP_
 
-#include "readoutlibs/ReadoutLogging.hpp"
+#include "datahandlinglibs/ReadoutLogging.hpp"
 
 #include "DummyConsumer.hpp"
 #include "DummyConsumer.cpp"
@@ -21,7 +21,7 @@
 #include <memory>
 #include <string>
 
-using namespace dunedaq::readoutlibs::logging;
+using namespace dunedaq::datahandlinglibs::logging;
 
 namespace dunedaq {
 namespace fdreadoutmodules {
