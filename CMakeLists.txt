@@ -40,7 +40,6 @@ set(FDREADOUTMODULES_DEPENDENCIES
   appfwk::appfwk
   logging::logging
   datahandlinglibs::datahandlinglibs
-  datahandlinglibs::datahandlinglibs
   fdreadoutlibs::fdreadoutlibs
   fddetdataformats::fddetdataformats
 )
