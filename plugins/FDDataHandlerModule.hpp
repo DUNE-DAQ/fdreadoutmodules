@@ -13,7 +13,7 @@
 //#include "appfwk/cmd/Structs.hpp"
 #include "appfwk/DAQModule.hpp"
 
-#include "readoutmodules/DataLinkHandlerBase.hpp"
+#include "datahandlinglibs/DataLinkHandlerBase.hpp"
 
 #include <string>
 
@@ -21,10 +21,10 @@ namespace dunedaq {
 namespace fdreadoutmodules {
 
 class FDDataHandlerModule : public dunedaq::appfwk::DAQModule,
-                          public dunedaq::readoutmodules::DataLinkHandlerBase
+                          public dunedaq::datahandlinglibs::DataLinkHandlerBase
 {
 public:
-  using inherited_dlh = dunedaq::readoutmodules::DataLinkHandlerBase;
+  using inherited_dlh = dunedaq::datahandlinglibs::DataLinkHandlerBase;
   using inherited_mod = dunedaq::appfwk::DAQModule;
   /**
    * @brief FDDataHandlerModule Constructor
@@ -40,7 +40,7 @@ public:
   void init(std::shared_ptr<appfwk::ModuleConfiguration> cfg) override;
   void get_info(opmonlib::InfoCollector& ci, int level) override;
 
-  std::unique_ptr<readoutlibs::ReadoutConcept>
+  std::unique_ptr<datahandlinglibs::DataHandlingConcept>
   create_readout(const appmodel::DataHandlerModule* modconf, std::atomic<bool>& run_marker) override;
 
 };

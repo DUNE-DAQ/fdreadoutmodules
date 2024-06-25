@@ -18,7 +18,7 @@ daq_setup_environment()
 find_package(appfwk REQUIRED)
 find_package(logging REQUIRED)
 find_package(opmonlib REQUIRED)
-find_package(readoutmodules REQUIRED)
+find_package(datahandlinglibs REQUIRED)
 find_package(fdreadoutlibs REQUIRED)
 find_package(fddetdataformats REQUIRED)
 find_package(Boost COMPONENTS unit_test_framework REQUIRED)
@@ -39,8 +39,7 @@ set(FDREADOUTMODULES_DEPENDENCIES
 #tools
   appfwk::appfwk
   logging::logging
-  readoutlibs::readoutlibs
-  readoutmodules::readoutmodules
+  datahandlinglibs::datahandlinglibs
   fdreadoutlibs::fdreadoutlibs
   fddetdataformats::fddetdataformats
 )
@@ -71,13 +70,13 @@ daq_add_python_bindings(*.cpp LINK_LIBRARIES ${PROJECT_NAME} ) # Any additional 
 
 # See https://dune-daq-sw.readthedocs.io/en/latest/packages/daq-cmake/#daq_add_plugin
 
-#daq_add_plugin(DataRecorderModule duneDAQModule LINK_LIBRARIES appfwk::appfwk readoutmodules::readoutmodules fdreadoutlibs::fdreadoutlibs)
-#daq_add_plugin(ErroredFrameConsumer duneDAQModule LINK_LIBRARIES appfwk::appfwk readoutmodules::readoutmodules fddetdataformats::fddetdataformats)
-#daq_add_plugin(FragmentConsumer duneDAQModule LINK_LIBRARIES appfwk::appfwk readoutmodules::readoutmodules fddetdataformats::fddetdataformats)
-#daq_add_plugin(TimeSyncConsumer duneDAQModule LINK_LIBRARIES appfwk::appfwk readoutmodules::readoutmodules)
+#daq_add_plugin(DataRecorderModule duneDAQModule LINK_LIBRARIES appfwk::appfwk datahandlinglibs::datahandlinglibs fdreadoutlibs::fdreadoutlibs)
+#daq_add_plugin(ErroredFrameConsumer duneDAQModule LINK_LIBRARIES appfwk::appfwk datahandlinglibs::datahandlinglibs fddetdataformats::fddetdataformats)
+#daq_add_plugin(FragmentConsumer duneDAQModule LINK_LIBRARIES appfwk::appfwk datahandlinglibs::datahandlinglibs fddetdataformats::fddetdataformats)
+#daq_add_plugin(TimeSyncConsumer duneDAQModule LINK_LIBRARIES appfwk::appfwk datahandlinglibs::datahandlinglibs)
 
-daq_add_plugin(FDDataHandlerModule duneDAQModule LINK_LIBRARIES appfwk::appfwk readoutmodules::readoutmodules fdreadoutlibs::fdreadoutlibs)
-daq_add_plugin(FDFakeReaderModule duneDAQModule LINK_LIBRARIES appfwk::appfwk readoutmodules::readoutmodules fdreadoutlibs::fdreadoutlibs)
+daq_add_plugin(FDDataHandlerModule duneDAQModule LINK_LIBRARIES appfwk::appfwk datahandlinglibs::datahandlinglibs fdreadoutlibs::fdreadoutlibs)
+daq_add_plugin(FDFakeReaderModule duneDAQModule LINK_LIBRARIES appfwk::appfwk datahandlinglibs::datahandlinglibs fdreadoutlibs::fdreadoutlibs)
 
 ##############################################################################
 

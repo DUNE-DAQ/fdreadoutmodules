@@ -12,24 +12,24 @@
 #include "fdreadoutlibs/DUNEWIBEthTypeAdapter.hpp"
 #include "fdreadoutlibs/TDEFrameTypeAdapter.hpp"
 #include "fdreadoutlibs/DAPHNESuperChunkTypeAdapter.hpp"
-//#include "ndreadoutlibs/NDReadoutPACMANTypeAdapter.hpp"
-//#include "ndreadoutlibs/NDReadoutMPDTypeAdapter.hpp"
+//#include "nddatahandlinglibs/NDReadoutPACMANTypeAdapter.hpp"
+//#include "nddatahandlinglibs/NDReadoutMPDTypeAdapter.hpp"
 
-#include "readoutlibs/ReadoutLogging.hpp"
-#include "readoutlibs/models/RecorderModel.hpp"
-#include "readoutlibs/recorderconfig/Nljs.hpp"
-#include "readoutlibs/recorderconfig/Structs.hpp"
-#include "readoutlibs/recorderinfo/InfoNljs.hpp"
+#include "datahandlinglibs/ReadoutLogging.hpp"
+#include "datahandlinglibs/models/RecorderModel.hpp"
+#include "datahandlinglibs/recorderconfig/Nljs.hpp"
+#include "datahandlinglibs/recorderconfig/Structs.hpp"
+#include "datahandlinglibs/recorderinfo/InfoNljs.hpp"
 
 #include "DataRecorderModule.hpp"
 #include "appfwk/DAQModuleHelper.hpp"
 
 #include "appfwk/cmd/Nljs.hpp"
 #include "logging/Logging.hpp"
-#include "readoutlibs/ReadoutIssues.hpp"
+#include "datahandlinglibs/DataHandlingIssues.hpp"
 #include <string>
 
-using namespace dunedaq::readoutlibs::logging;
+using namespace dunedaq::datahandlinglibs::logging;
 
 namespace dunedaq {
 namespace fdreadoutmodules {
@@ -51,7 +51,7 @@ DataRecorderModule::init(const data_t& args)
     auto ci = appfwk::connection_index(args, {"raw_recording"});
     auto datatypes = dunedaq::iomanager::IOManager::get()->get_datatypes(ci["raw_recording"]);
     if (datatypes.size() != 1) {
-    ers::error(dunedaq::readoutlibs::GenericConfigurationError(ERS_HERE,
+    ers::error(dunedaq::datahandlinglibs::GenericConfigurationError(ERS_HERE,
       "Multiple raw_recording queues specified! Expected only a single raw_dtance!"));
     }
     std::string raw_dt{ *datatypes.begin() };
@@ -61,7 +61,7 @@ DataRecorderModule::init(const data_t& args)
     // IF WIB2
     if (raw_dt.find("WIB2Frame") != std::string::npos) {
       TLOG_DEBUG(TLVL_WORK_STEPS) << "Creating recorder for wib2";
-      recorder.reset(new readoutlibs::RecorderModel<fdreadoutlibs::types::DUNEWIBSuperChunkTypeAdapter>(get_name()));
+      recorder.reset(new datahandlinglibs::RecorderModel<fdreadoutlibs::types::DUNEWIBSuperChunkTypeAdapter>(get_name()));
       recorder->init(args);
       return;
     }
@@ -69,7 +69,7 @@ DataRecorderModule::init(const data_t& args)
     /* IF WIB
     if (raw_dt.find("WIBFrame") != std::string::npos) {
       TLOG_DEBUG(TLVL_WORK_STEPS) << "Creating recorder for wib";
-      recorder.reset(new readoutlibs::RecorderModel<fdreadoutlibs::types::ProtoWIBSuperChunkTypeAdapter>(get_name()));
+      recorder.reset(new datahandlinglibs::RecorderModel<fdreadoutlibs::types::ProtoWIBSuperChunkTypeAdapter>(get_name()));
       recorder->init(args);
       return;
     }
@@ -78,7 +78,7 @@ DataRecorderModule::init(const data_t& args)
     // IF WIBEth
     if (raw_dt.find("WIBEthFrame") != std::string::npos) {
       TLOG_DEBUG(TLVL_WORK_STEPS) << "Creating recorder for wibeth";
-      recorder.reset(new readoutlibs::RecorderModel<fdreadoutlibs::types::DUNEWIBEthTypeAdapter>(get_name()));
+      recorder.reset(new datahandlinglibs::RecorderModel<fdreadoutlibs::types::DUNEWIBEthTypeAdapter>(get_name()));
       recorder->init(args);
       return;
     }
@@ -86,7 +86,7 @@ DataRecorderModule::init(const data_t& args)
     // IF PDS
     if (raw_dt.find("PDSFrame") != std::string::npos) {
       TLOG_DEBUG(TLVL_WORK_STEPS) << "Creating recorder for pds";
-      recorder.reset(new readoutlibs::RecorderModel<fdreadoutlibs::types::DAPHNESuperChunkTypeAdapter>(get_name()));
+      recorder.reset(new datahandlinglibs::RecorderModel<fdreadoutlibs::types::DAPHNESuperChunkTypeAdapter>(get_name()));
       recorder->init(args);
       return;
     }
@@ -95,7 +95,7 @@ DataRecorderModule::init(const data_t& args)
     /*
       if (raw_dt.find("PACMANFrame") != std::string::npos) {
       TLOG_DEBUG(TLVL_WORK_STEPS) << "Creating recorder for pacman";
-      recorder.reset(new readoutlibs::RecorderModel<ndreadoutlibs::types::NDReadoutPACMANTypeAdapter>(get_name()));
+      recorder.reset(new datahandlinglibs::RecorderModel<nddatahandlinglibs::types::NDReadoutPACMANTypeAdapter>(get_name()));
       recorder->init(args);
       return;
     }
@@ -103,7 +103,7 @@ DataRecorderModule::init(const data_t& args)
     // IF MPD
     if (raw_dt.find("MPDFrame") != std::string::npos) {
       TLOG_DEBUG(TLVL_WORK_STEPS) << "Creating recorder for mpd";
-      recorder.reset(new readoutlibs::RecorderModel<ndreadoutlibs::types::NDReadoutMPDTypeAdapter>(get_name()));
+      recorder.reset(new datahandlinglibs::RecorderModel<nddatahandlinglibs::types::NDReadoutMPDTypeAdapter>(get_name()));
       recorder->init(args);
       return;
     }
@@ -112,15 +112,15 @@ DataRecorderModule::init(const data_t& args)
     // IF TDE
     if (raw_dt.find("TDEFrame") != std::string::npos) {
       TLOG_DEBUG(TLVL_WORK_STEPS) << "Creating recorder for tde";
-      recorder.reset(new readoutlibs::RecorderModel<fdreadoutlibs::types::TDEFrameTypeAdapter>(get_name()));
+      recorder.reset(new datahandlinglibs::RecorderModel<fdreadoutlibs::types::TDEFrameTypeAdapter>(get_name()));
       recorder->init(args);
       return;
     }
 
-    throw readoutlibs::DataRecorderConfigurationError(ERS_HERE, "Could not create DataRecorderModule of type " + raw_dt);
+    throw datahandlinglibs::DataRecorderConfigurationError(ERS_HERE, "Could not create DataRecorderModule of type " + raw_dt);
 
   } catch (const ers::Issue& excpt) {
-    throw readoutlibs::DataRecorderModuleResourceQueueError(ERS_HERE, "Could not initialize queue", "raw_recording", "");
+    throw datahandlinglibs::DataRecorderModuleResourceQueueError(ERS_HERE, "Could not initialize queue", "raw_recording", "");
   }
 }
 

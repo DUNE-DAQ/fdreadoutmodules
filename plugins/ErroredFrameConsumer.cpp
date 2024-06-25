@@ -10,7 +10,7 @@
 #include "DummyConsumer.hpp"
 #include "fddetdataformats/WIBFrame.hpp"
 #include "logging/Logging.hpp"
-#include "readoutlibs/ReadoutLogging.hpp"
+#include "datahandlinglibs/ReadoutLogging.hpp"
 
 #include <bitset>
 

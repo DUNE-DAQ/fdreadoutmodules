@@ -12,10 +12,10 @@
 #include "appfwk/DAQModule.hpp"
 #include "utilities/WorkerThread.hpp"
 
-#include "readoutlibs/concepts/RecorderConcept.hpp"
-#include "readoutlibs/recorderconfig/Structs.hpp"
-#include "readoutlibs/utils/BufferedFileWriter.hpp"
-#include "readoutlibs/utils/ReusableThread.hpp"
+#include "datahandlinglibs/concepts/RecorderConcept.hpp"
+#include "datahandlinglibs/recorderconfig/Structs.hpp"
+#include "datahandlinglibs/utils/BufferedFileWriter.hpp"
+#include "datahandlinglibs/utils/ReusableThread.hpp"
 
 #include <atomic>
 #include <fstream>
@@ -46,9 +46,9 @@ private:
   void do_start(const nlohmann::json& obj);
   void do_stop(const nlohmann::json& obj);
 
-  std::unique_ptr<readoutlibs::RecorderConcept> recorder;
+  std::unique_ptr<datahandlinglibs::RecorderConcept> recorder;
 };
-} // namespace readoutmodules
+} // namespace datahandlinglibs
 } // namespace dunedaq
 
 #endif // FDREADOUTMODULES_PLUGINS_DATARECORDER_HPP_
