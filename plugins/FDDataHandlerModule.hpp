@@ -13,7 +13,7 @@
 //#include "appfwk/cmd/Structs.hpp"
 #include "appfwk/DAQModule.hpp"
 
-#include "datahandlinglibs/DataLinkHandlerBase.hpp"
+#include "datahandlinglibs/RawDataHandlerBase.hpp"
 
 #include <string>
 
@@ -21,10 +21,10 @@ namespace dunedaq {
 namespace fdreadoutmodules {
 
 class FDDataHandlerModule : public dunedaq::appfwk::DAQModule,
-                          public dunedaq::datahandlinglibs::DataLinkHandlerBase
+                          public dunedaq::datahandlinglibs::RawDataHandlerBase
 {
 public:
-  using inherited_dlh = dunedaq::datahandlinglibs::DataLinkHandlerBase;
+  using inherited_dlh = dunedaq::datahandlinglibs::RawDataHandlerBase;
   using inherited_mod = dunedaq::appfwk::DAQModule;
   /**
    * @brief FDDataHandlerModule Constructor
