@@ -50,6 +50,16 @@ set(FDREADOUTLIBS_USE_INTRINSICS ON)
 if(${FDREADOUTLIBS_USE_INTRINSICS})
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -mavx2")
 endif()
+
+set(READOUT_USE_LIBNUMA ON)
+
+if(${READOUT_USE_LIBNUMA})
+  find_package(PkgConfig REQUIRED)
+  pkg_check_modules(numa REQUIRED IMPORTED_TARGET "numa")
+  list(APPEND READOUT_DEPENDENCIES numa)
+  #list(APPEND READOUT_DEPENDENCIES ${numa_LINK_LIBRARIES})
+  add_compile_definitions(WITH_LIBNUMA_SUPPORT WITH_LIBNUMA_BIND_POLICY=1 WITH_LIBNUMA_STRICT_POLICY=1)
+endif()
 ##############################################################################
 
 
