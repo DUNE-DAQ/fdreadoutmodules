@@ -75,10 +75,15 @@ FDFakeCardReader::create_source_emulator(const appfwk::app::ConnectionReference 
 {
   //! Values suitable to emulation
 
-  static constexpr int daphne_time_tick_diff = 16;
-  static constexpr double daphne_dropout_rate = 0.9;
-  static constexpr double daphne_rate_khz = 200.0;
-  static constexpr int daphne_frames_per_tick = 1;
+  static constexpr int daphne_time_tick_diff = 1*1024; //1 tick per adc sample, 1024 samples per self-trigger
+  static constexpr double daphne_dropout_rate = 0.95; // trigger rate is ~2 KHz right now, so 95% droupout should give is ~3 kHz rate which is reasonable?
+  static constexpr double daphne_rate_khz = 61.03515625; // one frame every 16.384 us
+  static constexpr int daphne_frames_per_tick = 1; // ???
+
+  static constexpr int daphne_stream_time_tick_diff = 1*64; // 1 tick per adc sample, 64 samples per stream frame
+  static constexpr double daphne_stream_dropout_rate = 0.0; // streaming, no dropout
+  static constexpr double daphne_stream_rate_khz = 976.5625; // one frame every 1024 ns
+  static constexpr int daphne_stream_frames_per_tick = 1; // ??? what does this mean?
 
   // Obsolete
   //static constexpr int wib_time_tick_diff = 25;
@@ -159,7 +164,7 @@ FDFakeCardReader::create_source_emulator(const appfwk::app::ConnectionReference 
     TLOG_DEBUG(TLVL_WORK_STEPS) << "Creating fake pds stream link";
     auto source_emu_model =
       std::make_unique<readoutlibs::SourceEmulatorModel<fdreadoutlibs::types::DAPHNEStreamSuperChunkTypeAdapter>>(
-        qi.name, run_marker, daphne_time_tick_diff, daphne_dropout_rate, emu_frame_error_rate, daphne_rate_khz, daphne_frames_per_tick);
+        qi.name, run_marker, daphne_stream_time_tick_diff, daphne_stream_dropout_rate, emu_frame_error_rate, daphne_stream_rate_khz, daphne_stream_frames_per_tick);
     return source_emu_model;
   }
 
