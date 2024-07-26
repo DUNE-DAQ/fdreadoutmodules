@@ -21,6 +21,7 @@
 #include "fdreadoutlibs/DAPHNESuperChunkTypeAdapter.hpp"
 #include "fdreadoutlibs/DAPHNEStreamSuperChunkTypeAdapter.hpp"
 #include "fdreadoutlibs/TDEFrameTypeAdapter.hpp"
+#include "fdreadoutlibs/CRTTypeAdapter.hpp"
 
 #include <chrono>
 #include <fstream>
@@ -41,6 +42,7 @@ DUNE_DAQ_TYPESTRING(dunedaq::fdreadoutlibs::types::DUNEWIBEthTypeAdapter, "WIBEt
 DUNE_DAQ_TYPESTRING(dunedaq::fdreadoutlibs::types::DAPHNESuperChunkTypeAdapter, "PDSFrame")
 DUNE_DAQ_TYPESTRING(dunedaq::fdreadoutlibs::types::DAPHNEStreamSuperChunkTypeAdapter, "PDSStreamFrame")
 DUNE_DAQ_TYPESTRING(dunedaq::fdreadoutlibs::types::TDEFrameTypeAdapter, "TDEFrame")
+DUNE_DAQ_TYPESTRING(dunedaq::fdreadoutlibs::types::CRTTypeAdapter, "CRTFrame")
 
 namespace fdreadoutmodules {
 
@@ -103,6 +105,11 @@ FDFakeCardReader::create_source_emulator(const appfwk::app::ConnectionReference 
   static constexpr double tde_dropout_rate = 0.0;
   static constexpr double tde_rate_khz = 62500./tde_time_tick_diff;
   static constexpr int tde_frames_per_tick = dunedaq::fddetdataformats::n_channels_per_amc;
+
+  static constexpr int crt_time_tick_diff = 16;
+  static constexpr double crt_dropout_rate = 0.0;
+  static constexpr double crt_rate_khz = 200.0;
+  static constexpr int crt_frames_per_tick = 1;
 
   static constexpr double emu_frame_error_rate = 0.0;
 
@@ -167,6 +174,15 @@ FDFakeCardReader::create_source_emulator(const appfwk::app::ConnectionReference 
     auto source_emu_model =
       std::make_unique<readoutlibs::SourceEmulatorModel<fdreadoutlibs::types::TDEFrameTypeAdapter>>(
         qi.name, run_marker, tde_time_tick_diff, tde_dropout_rate, emu_frame_error_rate, tde_rate_khz, tde_frames_per_tick);
+    return source_emu_model;
+  }
+
+  // IF CRT
+  if (raw_dt.find("CRTFrame") != std::string::npos) {
+    TLOG_DEBUG(TLVL_WORK_STEPS) << "Creating fake crt link";
+    auto source_emu_model =
+      std::make_unique<readoutlibs::SourceEmulatorModel<fdreadoutlibs::types::CRTTypeAdapter>>(
+        qi.name, run_marker, crt_time_tick_diff, crt_dropout_rate, emu_frame_error_rate, crt_rate_khz, crt_frames_per_tick);
     return source_emu_model;
   }
 
