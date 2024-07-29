@@ -106,8 +106,8 @@ FDFakeCardReader::create_source_emulator(const appfwk::app::ConnectionReference 
   static constexpr double tde_rate_khz = 62500./tde_time_tick_diff;
   static constexpr int tde_frames_per_tick = dunedaq::fddetdataformats::n_channels_per_amc;
 
-  static constexpr int crt_time_tick_diff = 16;
-  static constexpr double crt_dropout_rate = 0.0;
+  static constexpr int crt_time_tick_diff = 1024;
+  static constexpr double crt_dropout_rate = 0.95;
   static constexpr double crt_rate_khz = 200.0;
   static constexpr int crt_frames_per_tick = 1;
 
