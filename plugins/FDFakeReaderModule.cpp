@@ -63,11 +63,11 @@ FDFakeReaderModule::init(std::shared_ptr<appfwk::ModuleConfiguration> cfg)
   TLOG_DEBUG(TLVL_ENTER_EXIT_METHODS) << get_name() << ": Exiting init() method";
 }
 
-void
-FDFakeReaderModule::get_info(opmonlib::InfoCollector& ci, int level)
-{
-  inherited_fcr::get_info(ci, level);
-}
+// void
+// FDFakeReaderModule::get_info(opmonlib::InfoCollector& ci, int level)
+// {
+//   inherited_fcr::get_info(ci, level);
+// }
 
 std::unique_ptr<datahandlinglibs::SourceEmulatorConcept>
 FDFakeReaderModule::create_source_emulator(std::string q_id, std::atomic<bool>& run_marker)

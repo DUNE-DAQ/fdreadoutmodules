@@ -87,11 +87,12 @@ FDDataHandlerModule::init(std::shared_ptr<appfwk::ModuleConfiguration> cfg)
   TLOG_DEBUG(TLVL_ENTER_EXIT_METHODS) << get_name() << ": Exiting init() method";
 }
 
-void
-FDDataHandlerModule::get_info(opmonlib::InfoCollector& ci, int level)
-{
-  inherited_dlh::get_info(ci, level);
-}
+  
+// void
+// FDDataHandlerModule::get_info(opmonlib::InfoCollector& ci, int level)
+// {
+//   inherited_dlh::get_info(ci, level);
+// }
 
 std::unique_ptr<datahandlinglibs::DataHandlingConcept>
 FDDataHandlerModule::create_readout(const appmodel::DataHandlerModule* modconf, std::atomic<bool>& run_marker)
