@@ -7,9 +7,7 @@
  */
 #include "FDDataHandlerModule.hpp"
 
-//#include "appfwk/cmd/Nljs.hpp"
-//#include "appfwk/app/Nljs.hpp"
-//#include "appfwk/cmd/Structs.hpp"
+#include "datahandlinglibs/opmon/datahandling_info.pb.h"
 
 #include "logging/Logging.hpp"
 #include "iomanager/IOManager.hpp"
@@ -26,8 +24,6 @@
 #include "datahandlinglibs/models/DefaultSkipListRequestHandler.hpp"
 #include "datahandlinglibs/models/SkipListLatencyBufferModel.hpp"
 
-//#include "fdreadoutlibs/ProtoWIBSuperChunkTypeAdapter.hpp"
-//#include "fdreadoutlibs/DUNEWIBSuperChunkTypeAdapter.hpp"
 #include "fdreadoutlibs/DUNEWIBEthTypeAdapter.hpp"
 #include "fdreadoutlibs/DAPHNESuperChunkTypeAdapter.hpp"
 #include "fdreadoutlibs/DAPHNEStreamSuperChunkTypeAdapter.hpp"
@@ -38,11 +34,8 @@
 #include "fdreadoutlibs/daphne/DAPHNEStreamFrameProcessor.hpp"
 #include "fdreadoutlibs/daphne/DAPHNEListRequestHandler.hpp"
 #include "fdreadoutlibs/ssp/SSPFrameProcessor.hpp"
-//#include "fdreadoutlibs/wib2/SWWIB2TriggerPrimitiveProcessor.hpp"
-//#include "fdreadoutlibs/wib2/WIB2FrameProcessor.hpp"
 #include "fdreadoutlibs/wibeth/WIBEthFrameProcessor.hpp"
 #include "fdreadoutlibs/tde/TDEFrameProcessor.hpp"
-//#include "fdreadoutlibs/wib/WIBFrameProcessor.hpp"
 
 #include <memory>
 #include <sstream>
@@ -53,15 +46,11 @@ using namespace dunedaq::datahandlinglibs::logging;
 
 namespace dunedaq {
 
-//DUNE_DAQ_TYPESTRING(dunedaq::fdreadoutlibs::types::ProtoWIBSuperChunkTypeAdapter, "WIBFrame")
-//DUNE_DAQ_TYPESTRING(dunedaq::fdreadoutlibs::types::DUNEWIBSuperChunkTypeAdapter, "WIB2Frame")
 DUNE_DAQ_TYPESTRING(dunedaq::fdreadoutlibs::types::DUNEWIBEthTypeAdapter, "WIBEthFrame")
 DUNE_DAQ_TYPESTRING(dunedaq::fdreadoutlibs::types::DAPHNESuperChunkTypeAdapter, "PDSFrame")
 DUNE_DAQ_TYPESTRING(dunedaq::fdreadoutlibs::types::DAPHNEStreamSuperChunkTypeAdapter, "PDSStreamFrame")
 DUNE_DAQ_TYPESTRING(dunedaq::fdreadoutlibs::types::SSPFrameTypeAdapter, "SSPFrame")
 DUNE_DAQ_TYPESTRING(dunedaq::fdreadoutlibs::types::TDEFrameTypeAdapter, "TDEFrame")
-//DUNE_DAQ_TYPESTRING(dunedaq::fdreadoutlibs::types::TriggerPrimitiveTypeAdapter, "TriggerPrimitive")
-//DUNE_DAQ_TYPESTRING(dunedaq::fdreadoutlibs::types::DUNEWIBFirmwareTriggerPrimitiveSuperChunkTypeAdapter, "FWTriggerPrimitive")
 
 namespace fdreadoutmodules {
 
@@ -69,7 +58,6 @@ FDDataHandlerModule::FDDataHandlerModule(const std::string& name)
   : DAQModule(name)
   , RawDataHandlerBase(name)
 { 
-  //inherited_dlh::m_readout_creator = make_readout_creator("fd");
 
   inherited_mod::register_command("conf", &inherited_dlh::do_conf);
   inherited_mod::register_command("scrap", &inherited_dlh::do_scrap);
@@ -88,11 +76,10 @@ FDDataHandlerModule::init(std::shared_ptr<appfwk::ModuleConfiguration> cfg)
 }
 
   
-// void
-// FDDataHandlerModule::get_info(opmonlib::InfoCollector& ci, int level)
-// {
-//   inherited_dlh::get_info(ci, level);
-// }
+ void
+ FDDataHandlerModule::generate_opmon_data()
+ {
+ }
 
 std::unique_ptr<datahandlinglibs::DataHandlingConcept>
 FDDataHandlerModule::create_readout(const appmodel::DataHandlerModule* modconf, std::atomic<bool>& run_marker)
@@ -106,19 +93,6 @@ FDDataHandlerModule::create_readout(const appmodel::DataHandlerModule* modconf, 
   std::string raw_dt = modconf->get_module_configuration()->get_input_data_type();
   TLOG() << "Choosing specializations for DataHandlingModel with data_type:" << raw_dt << ']';
 
-  /* IF WIB2
-  if (raw_dt.find("WIB2Frame") != std::string::npos) {
-    TLOG_DEBUG(TLVL_WORK_STEPS) << "Creating readout for a DUNE-WIB";
-    auto readout_model = std::make_unique<
-      rol::DataHandlingModel<fdt::DUNEWIBSuperChunkTypeAdapter,
-                        rol::ZeroCopyRecordingRequestHandlerModel<fdt::DUNEWIBSuperChunkTypeAdapter,
-                                                        rol::FixedRateQueueModel<fdt::DUNEWIBSuperChunkTypeAdapter>>,
-                        rol::FixedRateQueueModel<fdt::DUNEWIBSuperChunkTypeAdapter>,
-                        fdl::WIB2FrameProcessor>>(run_marker);
-    readout_model->init(modconf);
-    return readout_model;
-  }
-*/
   // IF WIBEth
   if (raw_dt.find("WIBEthFrame") != std::string::npos) {
     TLOG_DEBUG(TLVL_WORK_STEPS) << "Creating readout for an Ethernet DUNE-WIB";

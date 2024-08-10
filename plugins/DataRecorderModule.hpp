@@ -37,8 +37,8 @@ public:
   DataRecorderModule& operator=(DataRecorderModule&&) = delete;
 
   void init(const nlohmann::json& obj) override;
-  void get_info(opmonlib::InfoCollector& ci, int level) override;
-
+protected:
+  void generate_opmon_data() override;
 private:
   // Commands
   void do_conf(const nlohmann::json& obj);

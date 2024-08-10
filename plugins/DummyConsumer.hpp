@@ -36,10 +36,10 @@ public:
   DummyConsumer& operator=(DummyConsumer&&) = delete;
 
   void init(const nlohmann::json& obj) override;
-  void get_info(opmonlib::InfoCollector& ci, int level) override;
 
 protected:
   virtual void packet_callback(T& /*packet*/) {}
+  void generate_opmon_data() override;
 
 private:
   // Commands

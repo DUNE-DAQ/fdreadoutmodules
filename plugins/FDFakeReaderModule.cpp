@@ -79,17 +79,6 @@ FDFakeReaderModule::create_source_emulator(std::string q_id, std::atomic<bool>& 
   static constexpr double daphne_rate_khz = 200.0;
   static constexpr int daphne_frames_per_tick = 1;
 
-  // Obsolete
-  //static constexpr int wib_time_tick_diff = 25;
-  //static constexpr double wib_dropout_rate = 0.0;
-  //static constexpr double wib_rate_khz = 166.0;
-  //static constexpr int wib_frames_per_tick = 1;
-  
-  //static constexpr int wib2_time_tick_diff = 32;
-  //static constexpr double wib2_dropout_rate = 0.0;
-  //static constexpr double wib2_rate_khz = 166.0;
-  //static constexpr int wib2_frames_per_tick = 1;
-
   static constexpr int wibeth_time_tick_diff = 32*64;
   static constexpr double wibeth_dropout_rate = 0.0;
   static constexpr double wibeth_rate_khz = 30.5176;
@@ -120,25 +109,6 @@ FDFakeReaderModule::create_source_emulator(std::string q_id, std::atomic<bool>& 
     return source_emu_model;
   }
 
-  /* IF WIB2
-  if (raw_dt.find("WIB2Frame") != std::string::npos) {
-    TLOG_DEBUG(TLVL_WORK_STEPS) << "Creating fake wib2 link";
-
-    auto source_emu_model =
-      std::make_unique<datahandlinglibs::SourceEmulatorModel<fdreadoutlibs::types::DUNEWIBSuperChunkTypeAdapter>>(
-        q_id, run_marker, wib2_time_tick_diff, wib2_dropout_rate, emu_frame_error_rate, wib2_rate_khz, wib2_frames_per_tick);
-    return source_emu_model;
-  }
-  */
-  /* IF WIB
-  if (raw_dt.find("WIBFrame") != std::string::npos) {
-    TLOG_DEBUG(TLVL_WORK_STEPS) << "Creating fake wib link";
-    auto source_emu_model =
-      std::make_unique<datahandlinglibs::SourceEmulatorModel<fdreadoutlibs::types::ProtoWIBSuperChunkTypeAdapter>>(
-        qi.name, run_marker, wib_time_tick_diff, wib_dropout_rate, emu_frame_error_rate, wib_rate_khz, wib_frames_per_tick);
-    return source_emu_model;
-  }
-  */
   // IF PDS
   if (raw_dt.find("PDSFrame") != std::string::npos) {
     TLOG_DEBUG(TLVL_WORK_STEPS) << "Creating fake pds link";

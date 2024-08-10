@@ -26,14 +26,14 @@ public:
 
   void init(const data_t&) override;
 
-  void get_info(opmonlib::InfoCollector&, int /*level*/) override;
-
   DummyModule(const DummyModule&) = delete;
   DummyModule& operator=(const DummyModule&) = delete;
   DummyModule(DummyModule&&) = delete;
   DummyModule& operator=(DummyModule&&) = delete;
 
   ~DummyModule() = default;
+protected:
+  void generate_opmon_data() override;
 
 private:
   // Commands DummyModule can receive
