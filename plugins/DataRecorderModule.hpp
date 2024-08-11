@@ -46,7 +46,7 @@ private:
   void do_start(const nlohmann::json& obj);
   void do_stop(const nlohmann::json& obj);
 
-  std::unique_ptr<datahandlinglibs::RecorderConcept> recorder;
+  std::shared_ptr<datahandlinglibs::RecorderConcept> recorder;
 };
 } // namespace datahandlinglibs
 } // namespace dunedaq

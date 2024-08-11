@@ -38,7 +38,7 @@ public:
   //#warning MISSING OPMON
   //  void get_info(opmonlib::InfoCollector& ci, int level) override;
 
-  std::unique_ptr<datahandlinglibs::DataHandlingConcept>
+  std::shared_ptr<datahandlinglibs::DataHandlingConcept>
   create_readout(const appmodel::DataHandlerModule* modconf, std::atomic<bool>& run_marker) override;
 protected:
   void generate_opmon_data() override;

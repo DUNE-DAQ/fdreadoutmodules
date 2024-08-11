@@ -43,7 +43,7 @@ public:
   #warning MISSING OPMON
   //void get_info(opmonlib::InfoCollector& ci, int level) override;
 
-  std::unique_ptr<datahandlinglibs::SourceEmulatorConcept>
+  std::shared_ptr<datahandlinglibs::SourceEmulatorConcept>
   create_source_emulator(std::string qi, std::atomic<bool>& run_marker) override;
 
 };

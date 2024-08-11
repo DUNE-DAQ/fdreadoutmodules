@@ -81,7 +81,7 @@ FDDataHandlerModule::init(std::shared_ptr<appfwk::ModuleConfiguration> cfg)
  {
  }
 
-std::unique_ptr<datahandlinglibs::DataHandlingConcept>
+std::shared_ptr<datahandlinglibs::DataHandlingConcept>
 FDDataHandlerModule::create_readout(const appmodel::DataHandlerModule* modconf, std::atomic<bool>& run_marker)
 {
   namespace rol = dunedaq::datahandlinglibs;
@@ -96,12 +96,13 @@ FDDataHandlerModule::create_readout(const appmodel::DataHandlerModule* modconf, 
   // IF WIBEth
   if (raw_dt.find("WIBEthFrame") != std::string::npos) {
     TLOG_DEBUG(TLVL_WORK_STEPS) << "Creating readout for an Ethernet DUNE-WIB";
-    auto readout_model = std::make_unique<
+    auto readout_model = std::make_shared<
       rol::DataHandlingModel<fdt::DUNEWIBEthTypeAdapter,
 			rol::ZeroCopyRecordingRequestHandlerModel<fdt::DUNEWIBEthTypeAdapter,
                                                         rol::FixedRateQueueModel<fdt::DUNEWIBEthTypeAdapter>>,
                         rol::FixedRateQueueModel<fdt::DUNEWIBEthTypeAdapter>,
                         fdl::WIBEthFrameProcessor>>(run_marker);
+    register_node(modconf->UID(), readout_model);
     readout_model->init(modconf);
     return readout_model;
   }
@@ -110,10 +111,11 @@ FDDataHandlerModule::create_readout(const appmodel::DataHandlerModule* modconf, 
   if (raw_dt.find("PDSFrame") != std::string::npos) {
     TLOG_DEBUG(TLVL_WORK_STEPS) << "Creating readout for a PDS DAPHNE using SkipList LB";
     auto readout_model =
-      std::make_unique<rol::DataHandlingModel<fdt::DAPHNESuperChunkTypeAdapter,
+      std::make_shared<rol::DataHandlingModel<fdt::DAPHNESuperChunkTypeAdapter,
                                          fdl::DAPHNEListRequestHandler,
                                          rol::SkipListLatencyBufferModel<fdt::DAPHNESuperChunkTypeAdapter>,
                                          fdl::DAPHNEFrameProcessor>>(run_marker);
+    register_node(modconf->UID(), readout_model);
     readout_model->init(modconf);
     return readout_model;
   }
@@ -121,12 +123,13 @@ FDDataHandlerModule::create_readout(const appmodel::DataHandlerModule* modconf, 
   // IF PDS Stream Frame using SPSC LB
   if (raw_dt.find("PDSStreamFrame") != std::string::npos) {
     TLOG_DEBUG(TLVL_WORK_STEPS) << "Creating readout for a PDS DAPHNE stream mode using BinarySearchQueue LB";
-    auto readout_model = std::make_unique<
+    auto readout_model = std::make_shared<
       rol::DataHandlingModel<fdt::DAPHNEStreamSuperChunkTypeAdapter,
                         rol::DefaultRequestHandlerModel<fdt::DAPHNEStreamSuperChunkTypeAdapter,
                                                         rol::BinarySearchQueueModel<fdt::DAPHNEStreamSuperChunkTypeAdapter>>,
                         rol::BinarySearchQueueModel<fdt::DAPHNEStreamSuperChunkTypeAdapter>,
                         fdl::DAPHNEStreamFrameProcessor>>(run_marker);
+    register_node(modconf->UID(), readout_model);
     readout_model->init(modconf);
     return readout_model;
   }
@@ -134,11 +137,12 @@ FDDataHandlerModule::create_readout(const appmodel::DataHandlerModule* modconf, 
   // IF SSP
   if (raw_dt.find("SSPFrame") != std::string::npos) {
     TLOG_DEBUG(TLVL_WORK_STEPS) << "Creating readout for a SSPs using BinarySearchQueue LB";
-    auto readout_model = std::make_unique<rol::DataHandlingModel<
+    auto readout_model = std::make_shared<rol::DataHandlingModel<
       fdt::SSPFrameTypeAdapter,
       rol::DefaultRequestHandlerModel<fdt::SSPFrameTypeAdapter, rol::BinarySearchQueueModel<fdt::SSPFrameTypeAdapter>>,
       rol::BinarySearchQueueModel<fdt::SSPFrameTypeAdapter>,
       fdl::SSPFrameProcessor>>(run_marker);
+    register_node(modconf->UID(), readout_model);
     readout_model->init(modconf);
     return readout_model;
   }
@@ -146,11 +150,12 @@ FDDataHandlerModule::create_readout(const appmodel::DataHandlerModule* modconf, 
   // If TDE
   if (raw_dt.find("TDEFrame") != std::string::npos) {
     TLOG_DEBUG(TLVL_WORK_STEPS) << "Creating readout for TDE";
-    auto readout_model = std::make_unique<
+    auto readout_model = std::make_shared<
       rol::DataHandlingModel<fdt::TDEFrameTypeAdapter,
                         rol::DefaultSkipListRequestHandler<fdt::TDEFrameTypeAdapter>,
                         rol::SkipListLatencyBufferModel<fdt::TDEFrameTypeAdapter>,
                         fdl::TDEFrameProcessor>>(run_marker);
+    register_node(modconf->UID(), readout_model);
     readout_model->init(modconf);
     return readout_model;
   }

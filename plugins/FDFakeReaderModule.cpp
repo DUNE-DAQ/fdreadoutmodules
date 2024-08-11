@@ -69,7 +69,7 @@ FDFakeReaderModule::init(std::shared_ptr<appfwk::ModuleConfiguration> cfg)
 //   inherited_fcr::get_info(ci, level);
 // }
 
-std::unique_ptr<datahandlinglibs::SourceEmulatorConcept>
+std::shared_ptr<datahandlinglibs::SourceEmulatorConcept>
 FDFakeReaderModule::create_source_emulator(std::string q_id, std::atomic<bool>& run_marker)
 {
   //! Values suitable to emulation
@@ -104,8 +104,9 @@ FDFakeReaderModule::create_source_emulator(std::string q_id, std::atomic<bool>& 
   if (raw_dt.find("WIBEthFrame") != std::string::npos) {
     TLOG_DEBUG(TLVL_WORK_STEPS) << "Creating fake wibeth link";
     auto source_emu_model =
-      std::make_unique<datahandlinglibs::SourceEmulatorModel<fdreadoutlibs::types::DUNEWIBEthTypeAdapter>>(
+      std::make_shared<datahandlinglibs::SourceEmulatorModel<fdreadoutlibs::types::DUNEWIBEthTypeAdapter>>(
         q_id, run_marker, wibeth_time_tick_diff, wibeth_dropout_rate, emu_frame_error_rate, wibeth_rate_khz, wibeth_frames_per_tick);
+    register_node(q_id, source_emu_model);
     return source_emu_model;
   }
 
@@ -113,17 +114,19 @@ FDFakeReaderModule::create_source_emulator(std::string q_id, std::atomic<bool>& 
   if (raw_dt.find("PDSFrame") != std::string::npos) {
     TLOG_DEBUG(TLVL_WORK_STEPS) << "Creating fake pds link";
     auto source_emu_model =
-      std::make_unique<datahandlinglibs::SourceEmulatorModel<fdreadoutlibs::types::DAPHNESuperChunkTypeAdapter>>(
+      std::make_shared<datahandlinglibs::SourceEmulatorModel<fdreadoutlibs::types::DAPHNESuperChunkTypeAdapter>>(
         q_id, run_marker, daphne_time_tick_diff, daphne_dropout_rate, emu_frame_error_rate, daphne_rate_khz, daphne_frames_per_tick);
-    return source_emu_model;
+      register_node(q_id, source_emu_model);
+      return source_emu_model;
   }
 
   // IF PDSStream
   if (raw_dt.find("PDSStreamFrame") != std::string::npos) {
     TLOG_DEBUG(TLVL_WORK_STEPS) << "Creating fake pds stream link";
     auto source_emu_model =
-      std::make_unique<datahandlinglibs::SourceEmulatorModel<fdreadoutlibs::types::DAPHNEStreamSuperChunkTypeAdapter>>(
+      std::make_shared<datahandlinglibs::SourceEmulatorModel<fdreadoutlibs::types::DAPHNEStreamSuperChunkTypeAdapter>>(
         q_id, run_marker, daphne_time_tick_diff, daphne_dropout_rate, emu_frame_error_rate, daphne_rate_khz, daphne_frames_per_tick);
+      register_node(q_id, source_emu_model);
     return source_emu_model;
   }
 
@@ -131,8 +134,9 @@ FDFakeReaderModule::create_source_emulator(std::string q_id, std::atomic<bool>& 
   if (raw_dt.find("TDEFrame") != std::string::npos) {
     TLOG_DEBUG(TLVL_WORK_STEPS) << "Creating fake tde link";
     auto source_emu_model =
-      std::make_unique<datahandlinglibs::SourceEmulatorModel<fdreadoutlibs::types::TDEFrameTypeAdapter>>(
+      std::make_shared<datahandlinglibs::SourceEmulatorModel<fdreadoutlibs::types::TDEFrameTypeAdapter>>(
         q_id, run_marker, tde_time_tick_diff, tde_dropout_rate, emu_frame_error_rate, tde_rate_khz, tde_frames_per_tick);
+      register_node(q_id, source_emu_model);
     return source_emu_model;
   }
 
