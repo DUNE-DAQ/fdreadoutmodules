@@ -27,13 +27,11 @@
 #include "fdreadoutlibs/DUNEWIBEthTypeAdapter.hpp"
 #include "fdreadoutlibs/DAPHNESuperChunkTypeAdapter.hpp"
 #include "fdreadoutlibs/DAPHNEStreamSuperChunkTypeAdapter.hpp"
-#include "fdreadoutlibs/SSPFrameTypeAdapter.hpp"
 #include "fdreadoutlibs/TDEFrameTypeAdapter.hpp"
 
 #include "fdreadoutlibs/daphne/DAPHNEFrameProcessor.hpp"
 #include "fdreadoutlibs/daphne/DAPHNEStreamFrameProcessor.hpp"
 #include "fdreadoutlibs/daphne/DAPHNEListRequestHandler.hpp"
-#include "fdreadoutlibs/ssp/SSPFrameProcessor.hpp"
 #include "fdreadoutlibs/wibeth/WIBEthFrameProcessor.hpp"
 #include "fdreadoutlibs/tde/TDEFrameProcessor.hpp"
 
@@ -49,7 +47,6 @@ namespace dunedaq {
 DUNE_DAQ_TYPESTRING(dunedaq::fdreadoutlibs::types::DUNEWIBEthTypeAdapter, "WIBEthFrame")
 DUNE_DAQ_TYPESTRING(dunedaq::fdreadoutlibs::types::DAPHNESuperChunkTypeAdapter, "PDSFrame")
 DUNE_DAQ_TYPESTRING(dunedaq::fdreadoutlibs::types::DAPHNEStreamSuperChunkTypeAdapter, "PDSStreamFrame")
-DUNE_DAQ_TYPESTRING(dunedaq::fdreadoutlibs::types::SSPFrameTypeAdapter, "SSPFrame")
 DUNE_DAQ_TYPESTRING(dunedaq::fdreadoutlibs::types::TDEFrameTypeAdapter, "TDEFrame")
 
 namespace fdreadoutmodules {
@@ -129,19 +126,6 @@ FDDataHandlerModule::create_readout(const appmodel::DataHandlerModule* modconf, 
                                                         rol::BinarySearchQueueModel<fdt::DAPHNEStreamSuperChunkTypeAdapter>>,
                         rol::BinarySearchQueueModel<fdt::DAPHNEStreamSuperChunkTypeAdapter>,
                         fdl::DAPHNEStreamFrameProcessor>>(run_marker);
-    register_node(modconf->UID(), readout_model);
-    readout_model->init(modconf);
-    return readout_model;
-  }
-
-  // IF SSP
-  if (raw_dt.find("SSPFrame") != std::string::npos) {
-    TLOG_DEBUG(TLVL_WORK_STEPS) << "Creating readout for a SSPs using BinarySearchQueue LB";
-    auto readout_model = std::make_shared<rol::DataHandlingModel<
-      fdt::SSPFrameTypeAdapter,
-      rol::DefaultRequestHandlerModel<fdt::SSPFrameTypeAdapter, rol::BinarySearchQueueModel<fdt::SSPFrameTypeAdapter>>,
-      rol::BinarySearchQueueModel<fdt::SSPFrameTypeAdapter>,
-      fdl::SSPFrameProcessor>>(run_marker);
     register_node(modconf->UID(), readout_model);
     readout_model->init(modconf);
     return readout_model;
