@@ -33,7 +33,8 @@
 #include "fdreadoutlibs/daphne/DAPHNEStreamFrameProcessor.hpp"
 #include "fdreadoutlibs/daphne/DAPHNEListRequestHandler.hpp"
 #include "fdreadoutlibs/wibeth/WIBEthFrameProcessor.hpp"
-#include "fdreadoutlibs/tde/TDEFrameProcessor.hpp"
+#include "fdreadoutlibs/tde/TDEEthFrameProcessor.hpp"
+
 
 #include <memory>
 #include <sstream>
@@ -104,6 +105,20 @@ FDDataHandlerModule::create_readout(const appmodel::DataHandlerModule* modconf, 
     return readout_model;
   }
   
+  // IF TDEEth
+  if (raw_dt.find("TDEEthFrame") != std::string::npos) {
+    TLOG_DEBUG(TLVL_WORK_STEPS) << "Creating readout for an Ethernet TDEEth";
+    auto readout_model = 
+      std::make_unique<rol::DataHandlingModel<
+        fdt::TDEEthTypeAdapter,
+        rol::ZeroCopyRecordingRequestHandlerModel<fdt::TDEEthTypeAdapter, rol::FixedRateQueueModel<fdt::TDEEthTypeAdapter>>,
+        rol::FixedRateQueueModel<fdt::TDEEthTypeAdapter>,
+        fdl::TDEEthFrameProcessor
+      >>(run_marker);
+    readout_model->init(modconf);
+    return readout_model;
+  }
+
   // IF PDS Frame using skiplist
   if (raw_dt.find("PDSFrame") != std::string::npos) {
     TLOG_DEBUG(TLVL_WORK_STEPS) << "Creating readout for a PDS DAPHNE using SkipList LB";
@@ -126,19 +141,6 @@ FDDataHandlerModule::create_readout(const appmodel::DataHandlerModule* modconf, 
                                                         rol::BinarySearchQueueModel<fdt::DAPHNEStreamSuperChunkTypeAdapter>>,
                         rol::BinarySearchQueueModel<fdt::DAPHNEStreamSuperChunkTypeAdapter>,
                         fdl::DAPHNEStreamFrameProcessor>>(run_marker);
-    register_node(modconf->UID(), readout_model);
-    readout_model->init(modconf);
-    return readout_model;
-  }
-
-  // If TDE
-  if (raw_dt.find("TDEFrame") != std::string::npos) {
-    TLOG_DEBUG(TLVL_WORK_STEPS) << "Creating readout for TDE";
-    auto readout_model = std::make_shared<
-      rol::DataHandlingModel<fdt::TDEFrameTypeAdapter,
-                        rol::DefaultSkipListRequestHandler<fdt::TDEFrameTypeAdapter>,
-                        rol::SkipListLatencyBufferModel<fdt::TDEFrameTypeAdapter>,
-                        fdl::TDEFrameProcessor>>(run_marker);
     register_node(modconf->UID(), readout_model);
     readout_model->init(modconf);
     return readout_model;
