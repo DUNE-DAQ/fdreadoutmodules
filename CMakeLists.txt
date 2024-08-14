@@ -25,13 +25,7 @@ find_package(Boost COMPONENTS unit_test_framework REQUIRED)
 
 ##############################################################################
 
-
-# See https://dune-daq-sw.readthedocs.io/en/latest/packages/daq-cmake/#daq_codegen
-
-#daq_codegen(dummymodule.jsonnet TEMPLATES Structs.hpp.j2 Nljs.hpp.j2)
-#daq_codegen(dummymoduleinfo.jsonnet DEP_PKGS opmonlib TEMPLATES opmonlib/InfoStructs.hpp.j2 opmonlib/InfoNljs.hpp.j2)
-
-#daq_codegen(dummyconsumerinfo.jsonnet DEP_PKGS opmonlib TEMPLATES opmonlib/InfoStructs.hpp.j2 opmonlib/InfoNljs.hpp.j2)
+daq_protobuf_codegen( opmon/*.proto )
 
 ##############################################################################
 # Dependency sets
@@ -62,7 +56,7 @@ daq_add_library( LINK_LIBRARIES ${FDREADOUTMODULES_DEPENDENCIES} ) # Any source 
 # See https://dune-daq-sw.readthedocs.io/en/latest/packages/daq-cmake/#daq_add_python_bindings
 
 
-daq_add_python_bindings(*.cpp LINK_LIBRARIES ${PROJECT_NAME} ) # Any additional libraries to link in beyond the main library not yet determined
+#daq_add_python_bindings(*.cpp LINK_LIBRARIES ${PROJECT_NAME} ) # Any additional libraries to link in beyond the main library not yet determined
 
 
 ##############################################################################

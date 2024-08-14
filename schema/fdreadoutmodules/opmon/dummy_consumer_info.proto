@@ -1,0 +1,7 @@
+syntax = "proto3";
+
+package dunedaq.fdreadoutlibs.opmon;
+
+message DummyConsumerInfo {
+  uint64 packets_processed = 1; // Consumed data packets since start of run
+}

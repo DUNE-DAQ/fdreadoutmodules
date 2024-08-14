@@ -63,13 +63,13 @@ FDFakeReaderModule::init(std::shared_ptr<appfwk::ModuleConfiguration> cfg)
   TLOG_DEBUG(TLVL_ENTER_EXIT_METHODS) << get_name() << ": Exiting init() method";
 }
 
-void
-FDFakeReaderModule::get_info(opmonlib::InfoCollector& ci, int level)
-{
-  inherited_fcr::get_info(ci, level);
-}
+// void
+// FDFakeReaderModule::get_info(opmonlib::InfoCollector& ci, int level)
+// {
+//   inherited_fcr::get_info(ci, level);
+// }
 
-std::unique_ptr<datahandlinglibs::SourceEmulatorConcept>
+std::shared_ptr<datahandlinglibs::SourceEmulatorConcept>
 FDFakeReaderModule::create_source_emulator(std::string q_id, std::atomic<bool>& run_marker)
 {
   //! Values suitable to emulation
@@ -78,17 +78,6 @@ FDFakeReaderModule::create_source_emulator(std::string q_id, std::atomic<bool>& 
   static constexpr double daphne_dropout_rate = 0.9;
   static constexpr double daphne_rate_khz = 200.0;
   static constexpr int daphne_frames_per_tick = 1;
-
-  // Obsolete
-  //static constexpr int wib_time_tick_diff = 25;
-  //static constexpr double wib_dropout_rate = 0.0;
-  //static constexpr double wib_rate_khz = 166.0;
-  //static constexpr int wib_frames_per_tick = 1;
-  
-  //static constexpr int wib2_time_tick_diff = 32;
-  //static constexpr double wib2_dropout_rate = 0.0;
-  //static constexpr double wib2_rate_khz = 166.0;
-  //static constexpr int wib2_frames_per_tick = 1;
 
   static constexpr int wibeth_time_tick_diff = 32*64;
   static constexpr double wibeth_dropout_rate = 0.0;
@@ -115,45 +104,29 @@ FDFakeReaderModule::create_source_emulator(std::string q_id, std::atomic<bool>& 
   if (raw_dt.find("WIBEthFrame") != std::string::npos) {
     TLOG_DEBUG(TLVL_WORK_STEPS) << "Creating fake wibeth link";
     auto source_emu_model =
-      std::make_unique<datahandlinglibs::SourceEmulatorModel<fdreadoutlibs::types::DUNEWIBEthTypeAdapter>>(
+      std::make_shared<datahandlinglibs::SourceEmulatorModel<fdreadoutlibs::types::DUNEWIBEthTypeAdapter>>(
         q_id, run_marker, wibeth_time_tick_diff, wibeth_dropout_rate, emu_frame_error_rate, wibeth_rate_khz, wibeth_frames_per_tick);
+    register_node(q_id, source_emu_model);
     return source_emu_model;
   }
 
-  /* IF WIB2
-  if (raw_dt.find("WIB2Frame") != std::string::npos) {
-    TLOG_DEBUG(TLVL_WORK_STEPS) << "Creating fake wib2 link";
-
-    auto source_emu_model =
-      std::make_unique<datahandlinglibs::SourceEmulatorModel<fdreadoutlibs::types::DUNEWIBSuperChunkTypeAdapter>>(
-        q_id, run_marker, wib2_time_tick_diff, wib2_dropout_rate, emu_frame_error_rate, wib2_rate_khz, wib2_frames_per_tick);
-    return source_emu_model;
-  }
-  */
-  /* IF WIB
-  if (raw_dt.find("WIBFrame") != std::string::npos) {
-    TLOG_DEBUG(TLVL_WORK_STEPS) << "Creating fake wib link";
-    auto source_emu_model =
-      std::make_unique<datahandlinglibs::SourceEmulatorModel<fdreadoutlibs::types::ProtoWIBSuperChunkTypeAdapter>>(
-        qi.name, run_marker, wib_time_tick_diff, wib_dropout_rate, emu_frame_error_rate, wib_rate_khz, wib_frames_per_tick);
-    return source_emu_model;
-  }
-  */
   // IF PDS
   if (raw_dt.find("PDSFrame") != std::string::npos) {
     TLOG_DEBUG(TLVL_WORK_STEPS) << "Creating fake pds link";
     auto source_emu_model =
-      std::make_unique<datahandlinglibs::SourceEmulatorModel<fdreadoutlibs::types::DAPHNESuperChunkTypeAdapter>>(
+      std::make_shared<datahandlinglibs::SourceEmulatorModel<fdreadoutlibs::types::DAPHNESuperChunkTypeAdapter>>(
         q_id, run_marker, daphne_time_tick_diff, daphne_dropout_rate, emu_frame_error_rate, daphne_rate_khz, daphne_frames_per_tick);
-    return source_emu_model;
+      register_node(q_id, source_emu_model);
+      return source_emu_model;
   }
 
   // IF PDSStream
   if (raw_dt.find("PDSStreamFrame") != std::string::npos) {
     TLOG_DEBUG(TLVL_WORK_STEPS) << "Creating fake pds stream link";
     auto source_emu_model =
-      std::make_unique<datahandlinglibs::SourceEmulatorModel<fdreadoutlibs::types::DAPHNEStreamSuperChunkTypeAdapter>>(
+      std::make_shared<datahandlinglibs::SourceEmulatorModel<fdreadoutlibs::types::DAPHNEStreamSuperChunkTypeAdapter>>(
         q_id, run_marker, daphne_time_tick_diff, daphne_dropout_rate, emu_frame_error_rate, daphne_rate_khz, daphne_frames_per_tick);
+      register_node(q_id, source_emu_model);
     return source_emu_model;
   }
 
@@ -161,8 +134,9 @@ FDFakeReaderModule::create_source_emulator(std::string q_id, std::atomic<bool>& 
   if (raw_dt.find("TDEFrame") != std::string::npos) {
     TLOG_DEBUG(TLVL_WORK_STEPS) << "Creating fake tde link";
     auto source_emu_model =
-      std::make_unique<datahandlinglibs::SourceEmulatorModel<fdreadoutlibs::types::TDEFrameTypeAdapter>>(
+      std::make_shared<datahandlinglibs::SourceEmulatorModel<fdreadoutlibs::types::TDEFrameTypeAdapter>>(
         q_id, run_marker, tde_time_tick_diff, tde_dropout_rate, emu_frame_error_rate, tde_rate_khz, tde_frames_per_tick);
+      register_node(q_id, source_emu_model);
     return source_emu_model;
   }
 

@@ -5,26 +5,19 @@
  * Licensing/copyright details are in the COPYING file that you should have
  * received with this code.
  */
-//#include "readout/NDReadoutTypes.hpp"
-
-//#include "fdreadoutlibs/ProtoWIBSuperChunkTypeAdapter.hpp"
 #include "fdreadoutlibs/DUNEWIBSuperChunkTypeAdapter.hpp"
 #include "fdreadoutlibs/DUNEWIBEthTypeAdapter.hpp"
 #include "fdreadoutlibs/TDEFrameTypeAdapter.hpp"
 #include "fdreadoutlibs/DAPHNESuperChunkTypeAdapter.hpp"
-//#include "nddatahandlinglibs/NDReadoutPACMANTypeAdapter.hpp"
-//#include "nddatahandlinglibs/NDReadoutMPDTypeAdapter.hpp"
 
 #include "datahandlinglibs/ReadoutLogging.hpp"
 #include "datahandlinglibs/models/RecorderModel.hpp"
-#include "datahandlinglibs/recorderconfig/Nljs.hpp"
-#include "datahandlinglibs/recorderconfig/Structs.hpp"
-#include "datahandlinglibs/recorderinfo/InfoNljs.hpp"
+#include "datahandlinglibs/opmon/datahandling_info.pb.h"
 
 #include "DataRecorderModule.hpp"
 #include "appfwk/DAQModuleHelper.hpp"
 
-#include "appfwk/cmd/Nljs.hpp"
+//#include "appfwk/cmd/Nljs.hpp"
 #include "logging/Logging.hpp"
 #include "datahandlinglibs/DataHandlingIssues.hpp"
 #include <string>
@@ -66,15 +59,6 @@ DataRecorderModule::init(const data_t& args)
       return;
     }
 
-    /* IF WIB
-    if (raw_dt.find("WIBFrame") != std::string::npos) {
-      TLOG_DEBUG(TLVL_WORK_STEPS) << "Creating recorder for wib";
-      recorder.reset(new datahandlinglibs::RecorderModel<fdreadoutlibs::types::ProtoWIBSuperChunkTypeAdapter>(get_name()));
-      recorder->init(args);
-      return;
-    }
-    */
-
     // IF WIBEth
     if (raw_dt.find("WIBEthFrame") != std::string::npos) {
       TLOG_DEBUG(TLVL_WORK_STEPS) << "Creating recorder for wibeth";
@@ -91,24 +75,6 @@ DataRecorderModule::init(const data_t& args)
       return;
     }
 
-    // IF PACMAN
-    /*
-      if (raw_dt.find("PACMANFrame") != std::string::npos) {
-      TLOG_DEBUG(TLVL_WORK_STEPS) << "Creating recorder for pacman";
-      recorder.reset(new datahandlinglibs::RecorderModel<nddatahandlinglibs::types::NDReadoutPACMANTypeAdapter>(get_name()));
-      recorder->init(args);
-      return;
-    }
-
-    // IF MPD
-    if (raw_dt.find("MPDFrame") != std::string::npos) {
-      TLOG_DEBUG(TLVL_WORK_STEPS) << "Creating recorder for mpd";
-      recorder.reset(new datahandlinglibs::RecorderModel<nddatahandlinglibs::types::NDReadoutMPDTypeAdapter>(get_name()));
-      recorder->init(args);
-      return;
-    }
-    */
-
     // IF TDE
     if (raw_dt.find("TDEFrame") != std::string::npos) {
       TLOG_DEBUG(TLVL_WORK_STEPS) << "Creating recorder for tde";
@@ -116,6 +82,7 @@ DataRecorderModule::init(const data_t& args)
       recorder->init(args);
       return;
     }
+ 
 
     throw datahandlinglibs::DataRecorderConfigurationError(ERS_HERE, "Could not create DataRecorderModule of type " + raw_dt);
 

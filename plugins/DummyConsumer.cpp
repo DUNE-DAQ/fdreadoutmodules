@@ -8,13 +8,12 @@
 #include "DummyConsumer.hpp"
 
 #include "appfwk/DAQModuleHelper.hpp"
-#include "appfwk/cmd/Nljs.hpp"
 #include "logging/Logging.hpp"
 
 #include "datahandlinglibs/DataHandlingIssues.hpp"
 #include "datahandlinglibs/ReadoutLogging.hpp"
 
-#include "fdreadoutmodules/dummyconsumerinfo/InfoNljs.hpp"
+#include "fdreadoutmodules/opmon/dummy_consumer_info.pb.h"
 
 #include <string>
 
@@ -46,12 +45,12 @@ DummyConsumer<T>::init(const data_t& args)
 
 template<class T>
 void
-DummyConsumer<T>::get_info(opmonlib::InfoCollector& ci, int /* level */)
+DummyConsumer<T>::generate_opmon_data() 
 {
-  dummyconsumerinfo::Info info;
-  info.packets_processed = m_packets_processed;
+  opmon::DummyConsumerInfo info;
+  info.set_packets_processed = m_packets_processed;
 
-  ci.add(info);
+  publish(std::move(info));
 }
 
 template<class T>

@@ -8,9 +8,6 @@
 #ifndef FDREADOUTMODULES_PLUGINS_FDDATALINKHANDLER_HPP_
 #define FDREADOUTMODULES_PLUGINS_FDDATALINKHANDLER_HPP_
 
-//#include "appfwk/cmd/Nljs.hpp"
-//#include "appfwk/app/Nljs.hpp"
-//#include "appfwk/cmd/Structs.hpp"
 #include "appfwk/DAQModule.hpp"
 
 #include "datahandlinglibs/RawDataHandlerBase.hpp"
@@ -38,11 +35,13 @@ public:
   FDDataHandlerModule& operator=(FDDataHandlerModule&&) = delete;      ///< FDDataHandlerModule is not move-assignable
 
   void init(std::shared_ptr<appfwk::ModuleConfiguration> cfg) override;
-  void get_info(opmonlib::InfoCollector& ci, int level) override;
+  //#warning MISSING OPMON
+  //  void get_info(opmonlib::InfoCollector& ci, int level) override;
 
-  std::unique_ptr<datahandlinglibs::DataHandlingConcept>
+  std::shared_ptr<datahandlinglibs::DataHandlingConcept>
   create_readout(const appmodel::DataHandlerModule* modconf, std::atomic<bool>& run_marker) override;
-
+protected:
+  void generate_opmon_data() override;
 };
 
 } // namespace fdreadoutmodules

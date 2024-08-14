@@ -1,0 +1,8 @@
+syntax = "proto3";
+
+package dunedaq.fdreadoutlibs.opmon;
+
+message DummyModuleInfo {
+  uint64 total_amount = 1; 
+  uint64 new_amount = 2; 
+}

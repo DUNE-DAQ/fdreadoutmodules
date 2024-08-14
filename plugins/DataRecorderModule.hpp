@@ -37,8 +37,8 @@ public:
   DataRecorderModule& operator=(DataRecorderModule&&) = delete;
 
   void init(const nlohmann::json& obj) override;
-  void get_info(opmonlib::InfoCollector& ci, int level) override;
-
+protected:
+  void generate_opmon_data() override;
 private:
   // Commands
   void do_conf(const nlohmann::json& obj);
@@ -46,7 +46,7 @@ private:
   void do_start(const nlohmann::json& obj);
   void do_stop(const nlohmann::json& obj);
 
-  std::unique_ptr<datahandlinglibs::RecorderConcept> recorder;
+  std::shared_ptr<datahandlinglibs::RecorderConcept> recorder;
 };
 } // namespace datahandlinglibs
 } // namespace dunedaq
