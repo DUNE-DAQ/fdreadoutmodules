@@ -40,8 +40,6 @@ public:
   FDFakeReaderModule& operator=(FDFakeReaderModule&&) = delete;      ///< FDFakeReaderModule is not move-assignable
 
   void init(std::shared_ptr<appfwk::ModuleConfiguration> cfg) override;
-  #warning MISSING OPMON
-  //void get_info(opmonlib::InfoCollector& ci, int level) override;
 
   std::shared_ptr<datahandlinglibs::SourceEmulatorConcept>
   create_source_emulator(std::string qi, std::atomic<bool>& run_marker) override;
