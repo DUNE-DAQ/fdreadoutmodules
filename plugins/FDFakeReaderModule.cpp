@@ -52,7 +52,7 @@ FDFakeReaderModule::FDFakeReaderModule(const std::string& name)
   inherited_mod::register_command("conf", &inherited_fcr::do_conf);
   inherited_mod::register_command("scrap", &inherited_fcr::do_scrap);
   inherited_mod::register_command("start", &inherited_fcr::do_start);
-  inherited_mod::register_command("drain_dataflow", &inherited_fcr::do_stop);
+  inherited_mod::register_command("stop_trigger_sources", &inherited_fcr::do_stop);
 }
 
 void
