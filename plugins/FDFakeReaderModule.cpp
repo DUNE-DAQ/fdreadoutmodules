@@ -100,7 +100,7 @@ FDFakeReaderModule::create_source_emulator(std::string q_id, std::atomic<bool>& 
     auto source_emu_model =
       std::make_shared<datahandlinglibs::SourceEmulatorModel<fdreadoutlibs::types::DUNEWIBEthTypeAdapter>>(
         q_id, run_marker, wibeth_time_tick_diff, wibeth_dropout_rate, emu_frame_error_rate, wibeth_rate_khz, wibeth_frames_per_tick);
-    register_node(q_id, source_emu_model);
+    register_node("WIBEthFrameEmulator", source_emu_model);
     return source_emu_model;
   }
 
@@ -110,7 +110,7 @@ FDFakeReaderModule::create_source_emulator(std::string q_id, std::atomic<bool>& 
     auto source_emu_model =
       std::make_shared<datahandlinglibs::SourceEmulatorModel<fdreadoutlibs::types::DAPHNESuperChunkTypeAdapter>>(
         q_id, run_marker, daphne_time_tick_diff, daphne_dropout_rate, emu_frame_error_rate, daphne_rate_khz, daphne_frames_per_tick);
-      register_node(q_id, source_emu_model);
+      register_node("PDSFrameEmulator", source_emu_model);
       return source_emu_model;
   }
 
@@ -120,7 +120,7 @@ FDFakeReaderModule::create_source_emulator(std::string q_id, std::atomic<bool>& 
     auto source_emu_model =
       std::make_shared<datahandlinglibs::SourceEmulatorModel<fdreadoutlibs::types::DAPHNEStreamSuperChunkTypeAdapter>>(
         q_id, run_marker, daphne_time_tick_diff, daphne_dropout_rate, emu_frame_error_rate, daphne_rate_khz, daphne_frames_per_tick);
-      register_node(q_id, source_emu_model);
+      register_node("PDSStreamFrameEmulator", source_emu_model);
     return source_emu_model;
   }
 
@@ -130,7 +130,7 @@ FDFakeReaderModule::create_source_emulator(std::string q_id, std::atomic<bool>& 
     auto source_emu_model =
       std::make_shared<datahandlinglibs::SourceEmulatorModel<fdreadoutlibs::types::TDEFrameTypeAdapter>>(
         q_id, run_marker, tde_time_tick_diff, tde_dropout_rate, emu_frame_error_rate, tde_rate_khz, tde_frames_per_tick);
-      register_node(q_id, source_emu_model);
+      register_node("TDEFrameEmulator", source_emu_model);
     return source_emu_model;
   }
 
