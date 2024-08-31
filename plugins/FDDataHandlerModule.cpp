@@ -96,11 +96,11 @@ FDDataHandlerModule::create_readout(const appmodel::DataHandlerModule* modconf, 
     TLOG_DEBUG(TLVL_WORK_STEPS) << "Creating readout for an Ethernet DUNE-WIB";
     auto readout_model = std::make_shared<
       rol::DataHandlingModel<fdt::DUNEWIBEthTypeAdapter,
-			rol::ZeroCopyRecordingRequestHandlerModel<fdt::DUNEWIBEthTypeAdapter,
-                                                        rol::FixedRateQueueModel<fdt::DUNEWIBEthTypeAdapter>>,
-                        rol::FixedRateQueueModel<fdt::DUNEWIBEthTypeAdapter>,
-                        fdl::WIBEthFrameProcessor>>(run_marker);
-    register_node(modconf->UID(), readout_model);
+			     rol::ZeroCopyRecordingRequestHandlerModel<fdt::DUNEWIBEthTypeAdapter,
+								       rol::FixedRateQueueModel<fdt::DUNEWIBEthTypeAdapter>>,
+			     rol::FixedRateQueueModel<fdt::DUNEWIBEthTypeAdapter>,
+			     fdl::WIBEthFrameProcessor>>(run_marker);
+    register_node("WIBEthFrameProcessor", readout_model);
     readout_model->init(modconf);
     return readout_model;
   }
@@ -127,7 +127,7 @@ FDDataHandlerModule::create_readout(const appmodel::DataHandlerModule* modconf, 
                                          fdl::DAPHNEListRequestHandler,
                                          rol::SkipListLatencyBufferModel<fdt::DAPHNESuperChunkTypeAdapter>,
                                          fdl::DAPHNEFrameProcessor>>(run_marker);
-    register_node(modconf->UID(), readout_model);
+    register_node("PDSFrameProcessor", readout_model);
     readout_model->init(modconf);
     return readout_model;
   }
@@ -141,7 +141,7 @@ FDDataHandlerModule::create_readout(const appmodel::DataHandlerModule* modconf, 
                                                         rol::BinarySearchQueueModel<fdt::DAPHNEStreamSuperChunkTypeAdapter>>,
                         rol::BinarySearchQueueModel<fdt::DAPHNEStreamSuperChunkTypeAdapter>,
                         fdl::DAPHNEStreamFrameProcessor>>(run_marker);
-    register_node(modconf->UID(), readout_model);
+    register_node("PDSStreamFrameProcessor", readout_model);
     readout_model->init(modconf);
     return readout_model;
   }
