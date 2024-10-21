@@ -22,6 +22,7 @@
 #include "fdreadoutlibs/DAPHNESuperChunkTypeAdapter.hpp"
 #include "fdreadoutlibs/DAPHNEStreamSuperChunkTypeAdapter.hpp"
 #include "fdreadoutlibs/TDEFrameTypeAdapter.hpp"
+#include "fdreadoutlibs/TDEEthTypeAdapter.hpp"
 
 #include <chrono>
 #include <fstream>
@@ -42,6 +43,7 @@ DUNE_DAQ_TYPESTRING(dunedaq::fdreadoutlibs::types::DUNEWIBEthTypeAdapter, "WIBEt
 DUNE_DAQ_TYPESTRING(dunedaq::fdreadoutlibs::types::DAPHNESuperChunkTypeAdapter, "PDSFrame")
 DUNE_DAQ_TYPESTRING(dunedaq::fdreadoutlibs::types::DAPHNEStreamSuperChunkTypeAdapter, "PDSStreamFrame")
 DUNE_DAQ_TYPESTRING(dunedaq::fdreadoutlibs::types::TDEFrameTypeAdapter, "TDEFrame")
+DUNE_DAQ_TYPESTRING(dunedaq::fdreadoutlibs::types::TDEEthTypeAdapter, "TDEEthFrame")
 
 namespace fdreadoutmodules {
 
@@ -133,6 +135,23 @@ FDFakeReaderModule::create_source_emulator(std::string q_id, std::atomic<bool>& 
       register_node(q_id, source_emu_model);
     return source_emu_model;
   }
+
+  // IF TDEEth
+  if (raw_dt.find("TDEEthFrame") != std::string::npos) {
+    TLOG_DEBUG(TLVL_WORK_STEPS) << "Creating fake tde link";
+    auto source_emu_model =
+      std::make_shared<datahandlinglibs::SourceEmulatorModel<fdreadoutlibs::types::TDEEthTypeAdapter>>(
+        q_id,
+        run_marker,
+        tde_time_tick_diff,
+        tde_dropout_rate,
+        emu_frame_error_rate,
+        tde_rate_khz,
+        tde_frames_per_tick);
+    register_node(q_id, source_emu_model);
+    return source_emu_model;
+  }
+
 
   return nullptr;
 }
