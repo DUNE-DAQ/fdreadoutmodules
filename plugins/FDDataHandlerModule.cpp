@@ -97,10 +97,13 @@ FDDataHandlerModule::create_readout(const appmodel::DataHandlerModule* modconf, 
     TLOG_DEBUG(TLVL_WORK_STEPS) << "Creating readout for an Ethernet DUNE-WIB";
     auto readout_model = std::make_shared<
       rol::DataHandlingModel<fdt::DUNEWIBEthTypeAdapter,
-			     rol::ZeroCopyRecordingRequestHandlerModel<fdt::DUNEWIBEthTypeAdapter,
-								       rol::FixedRateQueueModel<fdt::DUNEWIBEthTypeAdapter>>,
-			     rol::FixedRateQueueModel<fdt::DUNEWIBEthTypeAdapter>,
-			     fdl::WIBEthFrameProcessor>>(run_marker);
+      rol::ZeroCopyRecordingRequestHandlerModel<
+        fdt::DUNEWIBEthTypeAdapter,
+        rol::FixedRateQueueModel<fdt::DUNEWIBEthTypeAdapter>
+      >,
+      rol::FixedRateQueueModel<fdt::DUNEWIBEthTypeAdapter>,
+      fdl::WIBEthFrameProcessor
+      >>(run_marker);
     register_node("WIBEthFrameProcessor", readout_model);
     readout_model->init(modconf);
     return readout_model;
@@ -110,12 +113,16 @@ FDDataHandlerModule::create_readout(const appmodel::DataHandlerModule* modconf, 
   if (raw_dt.find("TDEEthFrame") != std::string::npos) {
     TLOG_DEBUG(TLVL_WORK_STEPS) << "Creating readout for an Ethernet TDEEth";
     auto readout_model = 
-      std::make_unique<rol::DataHandlingModel<
+      std::make_shared<rol::DataHandlingModel<
         fdt::TDEEthTypeAdapter,
-        rol::ZeroCopyRecordingRequestHandlerModel<fdt::TDEEthTypeAdapter, rol::FixedRateQueueModel<fdt::TDEEthTypeAdapter>>,
+        rol::ZeroCopyRecordingRequestHandlerModel<
+          fdt::TDEEthTypeAdapter,
+          rol::FixedRateQueueModel<fdt::TDEEthTypeAdapter>
+        >,
         rol::FixedRateQueueModel<fdt::TDEEthTypeAdapter>,
         fdl::TDEEthFrameProcessor
       >>(run_marker);
+    register_node("TDEEthFrameProcessor", readout_model);
     readout_model->init(modconf);
     return readout_model;
   }
@@ -139,7 +146,7 @@ FDDataHandlerModule::create_readout(const appmodel::DataHandlerModule* modconf, 
     auto readout_model = std::make_shared<
       rol::DataHandlingModel<fdt::DAPHNEStreamSuperChunkTypeAdapter,
                         rol::DefaultRequestHandlerModel<fdt::DAPHNEStreamSuperChunkTypeAdapter,
-                                                        rol::BinarySearchQueueModel<fdt::DAPHNEStreamSuperChunkTypeAdapter>>,
+                        rol::BinarySearchQueueModel<fdt::DAPHNEStreamSuperChunkTypeAdapter>>,
                         rol::BinarySearchQueueModel<fdt::DAPHNEStreamSuperChunkTypeAdapter>,
                         fdl::DAPHNEStreamFrameProcessor>>(run_marker);
     register_node("PDSStreamFrameProcessor", readout_model);
