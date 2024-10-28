@@ -70,9 +70,9 @@ FDFakeReaderModule::create_source_emulator(std::string q_id, std::atomic<bool>& 
 {
   //! Values suitable to emulation
 
-  static constexpr int daphnestream_time_tick_diff = 16;
-  static constexpr double daphnestream_dropout_rate = 0.9;
-  static constexpr double daphnestream_rate_khz = 200.0;
+  static constexpr int daphnestream_time_tick_diff = fdreadoutlibs::types::DAPHNEStreamSuperChunkTypeAdapter::expected_tick_difference;
+  static constexpr double daphnestream_dropout_rate = 0.0;
+  static constexpr double daphnestream_rate_khz = 62500./daphnestream_time_tick_diff/fdreadoutlibs::types::kDAPHNEStreamNumFrames;
   static constexpr int daphnestream_frames_per_tick = 1;
 
   static constexpr int wibeth_time_tick_diff = fdreadoutlibs::types::DUNEWIBEthTypeAdapter::expected_tick_difference;;
