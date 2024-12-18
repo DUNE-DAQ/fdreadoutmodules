@@ -13,7 +13,7 @@
 //#include "appfwk/cmd/Structs.hpp"
 
 #include "appfwk/DAQModule.hpp"
-#include "appfwk/ModuleConfiguration.hpp"
+#include "appfwk/ConfigurationManager.hpp"
 
 #include "datahandlinglibs/FakeCardReaderBase.hpp"
 
@@ -39,7 +39,7 @@ public:
   FDFakeReaderModule(FDFakeReaderModule&&) = delete;                 ///< FDFakeReaderModule is not move-constructible
   FDFakeReaderModule& operator=(FDFakeReaderModule&&) = delete;      ///< FDFakeReaderModule is not move-assignable
 
-  void init(std::shared_ptr<appfwk::ModuleConfiguration> cfg) override;
+  void init(std::shared_ptr<appfwk::ConfigurationManager> cfg) override;
 
   std::shared_ptr<datahandlinglibs::SourceEmulatorConcept>
   create_source_emulator(std::string qi, std::atomic<bool>& run_marker) override;
