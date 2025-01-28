@@ -15,7 +15,7 @@
 #include "datahandlinglibs/concepts/RecorderConcept.hpp"
 #include "datahandlinglibs/recorderconfig/Structs.hpp"
 #include "datahandlinglibs/utils/BufferedFileWriter.hpp"
-#include "utilities/ReusableThread.hpp"
+#include "datahandlinglibs/utils/ReusableThread.hpp"
 
 #include <atomic>
 #include <fstream>
