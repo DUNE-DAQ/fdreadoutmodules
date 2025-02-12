@@ -52,7 +52,7 @@ private:
   std::shared_ptr<source_t> m_data_receiver;
 
   // Threading
-  datahandlinglibs::ReusableThread m_work_thread;
+  utilities::ReusableThread m_work_thread;
   std::atomic<bool> m_run_marker;
 
   // Stats
