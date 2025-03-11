@@ -31,7 +31,6 @@
 
 #include "fdreadoutlibs/daphne/DAPHNEFrameProcessor.hpp"
 #include "fdreadoutlibs/daphne/DAPHNEStreamFrameProcessor.hpp"
-#include "fdreadoutlibs/daphne/DAPHNEListRequestHandler.hpp"
 #include "fdreadoutlibs/wibeth/WIBEthFrameProcessor.hpp"
 #include "fdreadoutlibs/tde/TDEEthFrameProcessor.hpp"
 
@@ -130,11 +129,11 @@ FDDataHandlerModule::create_readout(const appmodel::DataHandlerModule* modconf, 
   // IF PDS Frame using skiplist
   if (raw_dt.find("PDSFrame") != std::string::npos) {
     TLOG_DEBUG(TLVL_WORK_STEPS) << "Creating readout for a PDS DAPHNE using SkipList LB";
-    auto readout_model =
-      std::make_shared<rol::DataHandlingModel<fdt::DAPHNESuperChunkTypeAdapter,
-                                         fdl::DAPHNEListRequestHandler,
-                                         rol::SkipListLatencyBufferModel<fdt::DAPHNESuperChunkTypeAdapter>,
-                                         fdl::DAPHNEFrameProcessor>>(run_marker);
+    auto readout_model = std::make_shared<rol::DataHandlingModel<
+        fdt::DAPHNESuperChunkTypeAdapter,
+        rol::DefaultSkipListRequestHandler<fdt::DAPHNESuperChunkTypeAdapter>,
+        rol::SkipListLatencyBufferModel<fdt::DAPHNESuperChunkTypeAdapter>,
+        fdl::DAPHNEFrameProcessor>>(run_marker);
     register_node("PDSFrameProcessor", readout_model);
     readout_model->init(modconf);
     return readout_model;
