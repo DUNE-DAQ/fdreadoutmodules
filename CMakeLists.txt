@@ -21,6 +21,7 @@ find_package(opmonlib REQUIRED)
 find_package(datahandlinglibs REQUIRED)
 find_package(fdreadoutlibs REQUIRED)
 find_package(fddetdataformats REQUIRED)
+find_package(utilities REQUIRED)
 find_package(Boost COMPONENTS unit_test_framework REQUIRED)
 
 ##############################################################################
@@ -36,6 +37,7 @@ set(FDREADOUTMODULES_DEPENDENCIES
   datahandlinglibs::datahandlinglibs
   fdreadoutlibs::fdreadoutlibs
   fddetdataformats::fddetdataformats
+  utilities::utilities
 )
 
 set(FDREADOUTLIBS_USE_INTRINSICS ON)
