@@ -73,6 +73,11 @@ FDFakeReaderModule::create_source_emulator(std::string q_id, std::atomic<bool>& 
   static constexpr double daphnestream_rate_khz = 62500./daphnestream_time_tick_diff/fdreadoutlibs::types::kDAPHNEStreamNumFrames;
   static constexpr int daphnestream_frames_per_tick = 1;
 
+  static constexpr int daphne_time_tick_diff = fdreadoutlibs::types::DAPHNESuperChunkTypeAdapter::expected_tick_difference;
+  static constexpr double daphne_dropout_rate = 0.0;
+  static constexpr double daphne_rate_khz = 62500./daphne_time_tick_diff/fdreadoutlibs::types::kDAPHNENumFrames;
+  static constexpr int daphne_frames_per_tick = 1;
+
   static constexpr int wibeth_time_tick_diff = fdreadoutlibs::types::DUNEWIBEthTypeAdapter::expected_tick_difference;;
   static constexpr double wibeth_dropout_rate = 0.0;
   static constexpr double wibeth_rate_khz = 62500./wibeth_time_tick_diff;
@@ -109,7 +114,7 @@ FDFakeReaderModule::create_source_emulator(std::string q_id, std::atomic<bool>& 
     TLOG_DEBUG(TLVL_WORK_STEPS) << "Creating fake pds link";
     auto source_emu_model =
       std::make_shared<datahandlinglibs::SourceEmulatorModel<fdreadoutlibs::types::DAPHNESuperChunkTypeAdapter>>(
-        q_id, run_marker, daphnestream_time_tick_diff, daphnestream_dropout_rate, emu_frame_error_rate, daphnestream_rate_khz, daphnestream_frames_per_tick);
+        q_id, run_marker, daphne_time_tick_diff, daphne_dropout_rate, emu_frame_error_rate, daphne_rate_khz, daphne_frames_per_tick);
       register_node(q_id, source_emu_model);
       return source_emu_model;
   }
