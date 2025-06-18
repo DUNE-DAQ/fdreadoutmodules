@@ -33,7 +33,8 @@
 #include "fdreadoutlibs/daphne/DAPHNEStreamFrameProcessor.hpp"
 #include "fdreadoutlibs/wibeth/WIBEthFrameProcessor.hpp"
 #include "fdreadoutlibs/tde/TDEEthFrameProcessor.hpp"
-
+#include "fdreadoutlibs/crt/CRTBernFrameProcessor.hpp"
+#include "fdreadoutlibs/crt/CRTGrenobleFrameProcessor.hpp"
 
 #include <memory>
 #include <sstream>
@@ -48,6 +49,8 @@ DUNE_DAQ_TYPESTRING(dunedaq::fdreadoutlibs::types::DUNEWIBEthTypeAdapter, "WIBEt
 DUNE_DAQ_TYPESTRING(dunedaq::fdreadoutlibs::types::DAPHNESuperChunkTypeAdapter, "PDSFrame")
 DUNE_DAQ_TYPESTRING(dunedaq::fdreadoutlibs::types::DAPHNEStreamSuperChunkTypeAdapter, "PDSStreamFrame")
 DUNE_DAQ_TYPESTRING(dunedaq::fdreadoutlibs::types::TDEEthTypeAdapter, "TDEEthFrame")
+DUNE_DAQ_TYPESTRING(dunedaq::fdreadoutlibs::types::CRTBernTypeAdapter, "CRTBernFrame")
+DUNE_DAQ_TYPESTRING(dunedaq::fdreadoutlibs::types::CRTGrenobleTypeAdapter, "CRTGrenobleFrame")
 
 namespace fdreadoutmodules {
 
@@ -107,6 +110,40 @@ FDDataHandlerModule::create_readout(const appmodel::DataHandlerModule* modconf, 
     return readout_model;
   }
   
+  // IF CRTBern
+  if (raw_dt.find("CRTBernFrame") != std::string::npos) {
+    TLOG_DEBUG(TLVL_WORK_STEPS) << "Creating readout for a CRTBern";
+    auto readout_model = std::make_shared<
+      rol::DataHandlingModel<fdt::CRTBernTypeAdapter,
+      rol::ZeroCopyRecordingRequestHandlerModel<
+        fdt::CRTBernTypeAdapter,
+        rol::FixedRateQueueModel<fdt::CRTBernTypeAdapter>
+      >,
+      rol::FixedRateQueueModel<fdt::CRTBernTypeAdapter>,
+      fdl::CRTBernFrameProcessor
+      >>(run_marker);
+    register_node("CRTBernFrameProcessor", readout_model);
+    readout_model->init(modconf);
+    return readout_model;
+  }
+
+  // IF CRTGrenoble
+  if (raw_dt.find("CRTGrenobleFrame") != std::string::npos) {
+    TLOG_DEBUG(TLVL_WORK_STEPS) << "Creating readout for a CRTGrenoble";
+    auto readout_model = std::make_shared<
+      rol::DataHandlingModel<fdt::CRTGrenobleTypeAdapter,
+      rol::ZeroCopyRecordingRequestHandlerModel<
+        fdt::CRTGrenobleTypeAdapter,
+        rol::FixedRateQueueModel<fdt::CRTGrenobleTypeAdapter>
+      >,
+      rol::FixedRateQueueModel<fdt::CRTGrenobleTypeAdapter>,
+      fdl::CRTGrenobleFrameProcessor
+      >>(run_marker);
+    register_node("CRTGrenobleFrameProcessor", readout_model);
+    readout_model->init(modconf);
+    return readout_model;
+  }  
+
   // IF TDEEth
   if (raw_dt.find("TDEEthFrame") != std::string::npos) {
     TLOG_DEBUG(TLVL_WORK_STEPS) << "Creating readout for an Ethernet TDEEth";
