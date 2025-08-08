@@ -22,6 +22,8 @@
 #include "fdreadoutlibs/DAPHNESuperChunkTypeAdapter.hpp"
 #include "fdreadoutlibs/DAPHNEStreamSuperChunkTypeAdapter.hpp"
 #include "fdreadoutlibs/TDEEthTypeAdapter.hpp"
+#include "fdreadoutlibs/CRTBernTypeAdapter.hpp"
+#include "fdreadoutlibs/CRTGrenobleTypeAdapter.hpp"
 
 #include <chrono>
 #include <fstream>
@@ -42,6 +44,8 @@ DUNE_DAQ_TYPESTRING(dunedaq::fdreadoutlibs::types::DUNEWIBEthTypeAdapter, "WIBEt
 DUNE_DAQ_TYPESTRING(dunedaq::fdreadoutlibs::types::DAPHNESuperChunkTypeAdapter, "PDSFrame")
 DUNE_DAQ_TYPESTRING(dunedaq::fdreadoutlibs::types::DAPHNEStreamSuperChunkTypeAdapter, "PDSStreamFrame")
 DUNE_DAQ_TYPESTRING(dunedaq::fdreadoutlibs::types::TDEEthTypeAdapter, "TDEEthFrame")
+DUNE_DAQ_TYPESTRING(dunedaq::fdreadoutlibs::types::CRTBernTypeAdapter, "CRTBernFrame")
+DUNE_DAQ_TYPESTRING(dunedaq::fdreadoutlibs::types::CRTGrenobleTypeAdapter, "CRTGrenobleFrame")
 
 namespace fdreadoutmodules {
 
@@ -87,6 +91,16 @@ FDFakeReaderModule::create_source_emulator(std::string q_id, std::atomic<bool>& 
   static constexpr double tdeeth_dropout_rate = 0.0;
   static constexpr double tdeeth_rate_khz = 62500./tdeeth_time_tick_diff;
   static constexpr int tdeeth_frames_per_tick = 1;
+
+  static constexpr int crtbern_time_tick_diff = 625;
+  static constexpr double crtbern_dropout_rate = 0.0;
+  static constexpr double crtbern_rate_khz = 100;
+  static constexpr int crtbern_frames_per_tick = 1;
+
+  static constexpr int crtgrenoble_time_tick_diff = 625;
+  static constexpr double crtgrenoble_dropout_rate = 0.0;
+  static constexpr double crtgrenoble_rate_khz = 100;
+  static constexpr int crtgrenoble_frames_per_tick = 1;  
 
   static constexpr double emu_frame_error_rate = 0.0;
 
@@ -145,6 +159,25 @@ FDFakeReaderModule::create_source_emulator(std::string q_id, std::atomic<bool>& 
     return source_emu_model;
   }
 
+  // IF CRTBern
+  if (raw_dt.find("CRTBernFrame") != std::string::npos) {
+    TLOG_DEBUG(TLVL_WORK_STEPS) << "Creating fake crt bern link";
+    auto source_emu_model =
+      std::make_shared<datahandlinglibs::SourceEmulatorModel<fdreadoutlibs::types::CRTBernTypeAdapter>>(
+        q_id, run_marker, crtbern_time_tick_diff, crtbern_dropout_rate, emu_frame_error_rate, crtbern_rate_khz, crtbern_frames_per_tick);
+    register_node(q_id, source_emu_model);
+    return source_emu_model;
+  }  
+  
+  // IF CRTGrenoble
+  if (raw_dt.find("CRTGrenobleFrame") != std::string::npos) {
+    TLOG_DEBUG(TLVL_WORK_STEPS) << "Creating fake crt grenoble link";
+    auto source_emu_model =
+      std::make_shared<datahandlinglibs::SourceEmulatorModel<fdreadoutlibs::types::CRTGrenobleTypeAdapter>>(
+        q_id, run_marker, crtgrenoble_time_tick_diff, crtgrenoble_dropout_rate, emu_frame_error_rate, crtgrenoble_rate_khz, crtgrenoble_frames_per_tick);
+    register_node(q_id, source_emu_model);
+    return source_emu_model;
+  }  
 
   return nullptr;
 }
