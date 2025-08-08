@@ -115,11 +115,9 @@ FDDataHandlerModule::create_readout(const appmodel::DataHandlerModule* modconf, 
     TLOG_DEBUG(TLVL_WORK_STEPS) << "Creating readout for a CRTBern";
     auto readout_model = std::make_shared<
       rol::DataHandlingModel<fdt::CRTBernTypeAdapter,
-      rol::ZeroCopyRecordingRequestHandlerModel<
-        fdt::CRTBernTypeAdapter,
-        rol::FixedRateQueueModel<fdt::CRTBernTypeAdapter>
-      >,
-      rol::FixedRateQueueModel<fdt::CRTBernTypeAdapter>,
+      rol::DefaultRequestHandlerModel<fdt::CRTBernTypeAdapter,
+      rol::BinarySearchQueueModel<fdt::CRTBernTypeAdapter>>,
+      rol::BinarySearchQueueModel<fdt::CRTBernTypeAdapter>,
       fdl::CRTBernFrameProcessor
       >>(run_marker);
     register_node("CRTBernFrameProcessor", readout_model);
@@ -132,11 +130,9 @@ FDDataHandlerModule::create_readout(const appmodel::DataHandlerModule* modconf, 
     TLOG_DEBUG(TLVL_WORK_STEPS) << "Creating readout for a CRTGrenoble";
     auto readout_model = std::make_shared<
       rol::DataHandlingModel<fdt::CRTGrenobleTypeAdapter,
-      rol::ZeroCopyRecordingRequestHandlerModel<
-        fdt::CRTGrenobleTypeAdapter,
-        rol::FixedRateQueueModel<fdt::CRTGrenobleTypeAdapter>
-      >,
-      rol::FixedRateQueueModel<fdt::CRTGrenobleTypeAdapter>,
+      rol::DefaultRequestHandlerModel<fdt::CRTGrenobleTypeAdapter,
+      rol::BinarySearchQueueModel<fdt::CRTGrenobleTypeAdapter>>,
+      rol::BinarySearchQueueModel<fdt::CRTGrenobleTypeAdapter>,
       fdl::CRTGrenobleFrameProcessor
       >>(run_marker);
     register_node("CRTGrenobleFrameProcessor", readout_model);
