@@ -35,7 +35,7 @@ public:
   DummyConsumer(DummyConsumer&&) = delete;
   DummyConsumer& operator=(DummyConsumer&&) = delete;
 
-  void init(const nlohmann::json& obj) override;
+  void init(const CommandData_t& obj) override;
 
 protected:
   virtual void packet_callback(T& /*packet*/) {}
@@ -43,8 +43,8 @@ protected:
 
 private:
   // Commands
-  void do_start(const nlohmann::json& obj);
-  void do_stop(const nlohmann::json& obj);
+  void do_start(const CommandData_t& obj);
+  void do_stop(const CommandData_t& obj);
   void do_work();
 
   // Queue
