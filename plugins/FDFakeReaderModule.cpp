@@ -24,6 +24,7 @@
 #include "fdreadoutlibs/TDEEthTypeAdapter.hpp"
 #include "fdreadoutlibs/CRTBernTypeAdapter.hpp"
 #include "fdreadoutlibs/CRTGrenobleTypeAdapter.hpp"
+#include "fdreadoutlibs/DAPHNEEthTypeAdapter.hpp"
 
 #include <chrono>
 #include <fstream>
@@ -43,6 +44,7 @@ namespace dunedaq {
 DUNE_DAQ_TYPESTRING(dunedaq::fdreadoutlibs::types::DUNEWIBEthTypeAdapter, "WIBEthFrame")
 DUNE_DAQ_TYPESTRING(dunedaq::fdreadoutlibs::types::DAPHNESuperChunkTypeAdapter, "PDSFrame")
 DUNE_DAQ_TYPESTRING(dunedaq::fdreadoutlibs::types::DAPHNEStreamSuperChunkTypeAdapter, "PDSStreamFrame")
+DUNE_DAQ_TYPESTRING(dunedaq::fdreadoutlibs::types::DAPHNEEthTypeAdapter, "PDSEthFrame")
 DUNE_DAQ_TYPESTRING(dunedaq::fdreadoutlibs::types::TDEEthTypeAdapter, "TDEEthFrame")
 DUNE_DAQ_TYPESTRING(dunedaq::fdreadoutlibs::types::CRTBernTypeAdapter, "CRTBernFrame")
 DUNE_DAQ_TYPESTRING(dunedaq::fdreadoutlibs::types::CRTGrenobleTypeAdapter, "CRTGrenobleFrame")
@@ -81,6 +83,11 @@ FDFakeReaderModule::create_source_emulator(std::string q_id, std::atomic<bool>& 
   static constexpr double daphne_dropout_rate = 0.0;
   static constexpr double daphne_rate_khz = 62500./daphne_time_tick_diff/fdreadoutlibs::types::kDAPHNENumFrames;
   static constexpr int daphne_frames_per_tick = 1;
+
+  static constexpr int daphneeth_time_tick_diff = fdreadoutlibs::types::DAPHNEEthTypeAdapter::expected_tick_difference;
+  static constexpr double daphneeth_dropout_rate = 0.0;
+  static constexpr double daphneeth_rate_khz = 62500./daphneeth_time_tick_diff;
+  static constexpr int daphneeth_frames_per_tick = 1;
 
   static constexpr int wibeth_time_tick_diff = fdreadoutlibs::types::DUNEWIBEthTypeAdapter::expected_tick_difference;;
   static constexpr double wibeth_dropout_rate = 0.0;
@@ -129,6 +136,16 @@ FDFakeReaderModule::create_source_emulator(std::string q_id, std::atomic<bool>& 
     auto source_emu_model =
       std::make_shared<datahandlinglibs::SourceEmulatorModel<fdreadoutlibs::types::DAPHNESuperChunkTypeAdapter>>(
         q_id, run_marker, daphne_time_tick_diff, daphne_dropout_rate, emu_frame_error_rate, daphne_rate_khz, daphne_frames_per_tick);
+      register_node(q_id, source_emu_model);
+      return source_emu_model;
+  }
+
+  // IF PDS Ethernet
+  if (raw_dt.find("PDSEthFrame") != std::string::npos) {
+    TLOG_DEBUG(TLVL_WORK_STEPS) << "Creating fake pds link";
+    auto source_emu_model =
+      std::make_shared<datahandlinglibs::SourceEmulatorModel<fdreadoutlibs::types::DAPHNEEthTypeAdapter>>(
+        q_id, run_marker, daphneeth_time_tick_diff, daphneeth_dropout_rate, emu_frame_error_rate, daphneeth_rate_khz, daphneeth_frames_per_tick);
       register_node(q_id, source_emu_model);
       return source_emu_model;
   }
