@@ -77,7 +77,7 @@ DataRecorderModule::init(const data_t& args)
     }
 
     // IF PDSEth
-    if (raw_dt.find("PDSEthFrame") != std::string::npos) {
+    if (raw_dt.find("DAPHNEEthFrame") != std::string::npos) {
       TLOG_DEBUG(TLVL_WORK_STEPS) << "Creating recorder for pds";
       recorder.reset(new datahandlinglibs::RecorderModel<fdreadoutlibs::types::DAPHNEEthTypeAdapter>(get_name()));
       recorder->init(args);

@@ -53,7 +53,7 @@ DUNE_DAQ_TYPESTRING(dunedaq::fdreadoutlibs::types::DAPHNEStreamSuperChunkTypeAda
 DUNE_DAQ_TYPESTRING(dunedaq::fdreadoutlibs::types::TDEEthTypeAdapter, "TDEEthFrame")
 DUNE_DAQ_TYPESTRING(dunedaq::fdreadoutlibs::types::CRTBernTypeAdapter, "CRTBernFrame")
 DUNE_DAQ_TYPESTRING(dunedaq::fdreadoutlibs::types::CRTGrenobleTypeAdapter, "CRTGrenobleFrame")
-DUNE_DAQ_TYPESTRING(dunedaq::fdreadoutlibs::types::DAPHNEEthTypeAdapter, "PDSEthFrame")
+DUNE_DAQ_TYPESTRING(dunedaq::fdreadoutlibs::types::DAPHNEEthTypeAdapter, "DAPHNEEthFrame")
 
 namespace fdreadoutmodules {
 
@@ -173,14 +173,14 @@ FDDataHandlerModule::create_readout(const appmodel::DataHandlerModule* modconf, 
   }
 
   // IF PDS Frame using skiplist
-  if (raw_dt.find("PDSEthFrame") != std::string::npos) {
+  if (raw_dt.find("DAPHNEEthFrame") != std::string::npos) {
     TLOG_DEBUG(TLVL_WORK_STEPS) << "Creating readout for a PDS DAPHNE Ethernet using SkipList LB";
     auto readout_model = std::make_shared<rol::DataHandlingModel<
         fdt::DAPHNEEthTypeAdapter,
         rol::DefaultSkipListRequestHandler<fdt::DAPHNEEthTypeAdapter>,
         rol::SkipListLatencyBufferModel<fdt::DAPHNEEthTypeAdapter>,
         fdl::DAPHNEEthFrameProcessor>>(run_marker);
-    register_node("PDSEthFrameProcessor", readout_model);
+    register_node("DAPHNEEthFrameProcessor", readout_model);
     readout_model->init(modconf);
     return readout_model;
   }
