@@ -28,6 +28,7 @@
 #include "fdreadoutlibs/DAPHNESuperChunkTypeAdapter.hpp"
 #include "fdreadoutlibs/DAPHNEStreamSuperChunkTypeAdapter.hpp"
 #include "fdreadoutlibs/TDEEthTypeAdapter.hpp"
+#include "fdreadoutlibs/DAPHNEEthTypeAdapter.hpp"
 
 #include "fdreadoutlibs/daphne/DAPHNEFrameProcessor.hpp"
 #include "fdreadoutlibs/daphne/DAPHNEStreamFrameProcessor.hpp"
@@ -35,6 +36,7 @@
 #include "fdreadoutlibs/tde/TDEEthFrameProcessor.hpp"
 #include "fdreadoutlibs/crt/CRTBernFrameProcessor.hpp"
 #include "fdreadoutlibs/crt/CRTGrenobleFrameProcessor.hpp"
+#include "fdreadoutlibs/daphneeth/DAPHNEEthFrameProcessor.hpp"
 
 #include <memory>
 #include <sstream>
@@ -51,6 +53,7 @@ DUNE_DAQ_TYPESTRING(dunedaq::fdreadoutlibs::types::DAPHNEStreamSuperChunkTypeAda
 DUNE_DAQ_TYPESTRING(dunedaq::fdreadoutlibs::types::TDEEthTypeAdapter, "TDEEthFrame")
 DUNE_DAQ_TYPESTRING(dunedaq::fdreadoutlibs::types::CRTBernTypeAdapter, "CRTBernFrame")
 DUNE_DAQ_TYPESTRING(dunedaq::fdreadoutlibs::types::CRTGrenobleTypeAdapter, "CRTGrenobleFrame")
+DUNE_DAQ_TYPESTRING(dunedaq::fdreadoutlibs::types::DAPHNEEthTypeAdapter, "DAPHNEEthFrame")
 
 namespace fdreadoutmodules {
 
@@ -165,6 +168,19 @@ FDDataHandlerModule::create_readout(const appmodel::DataHandlerModule* modconf, 
         rol::SkipListLatencyBufferModel<fdt::DAPHNESuperChunkTypeAdapter>,
         fdl::DAPHNEFrameProcessor>>(run_marker);
     register_node("PDSFrameProcessor", readout_model);
+    readout_model->init(modconf);
+    return readout_model;
+  }
+
+  // IF PDS Frame using skiplist
+  if (raw_dt.find("DAPHNEEthFrame") != std::string::npos) {
+    TLOG_DEBUG(TLVL_WORK_STEPS) << "Creating readout for a PDS DAPHNE Ethernet using SkipList LB";
+    auto readout_model = std::make_shared<rol::DataHandlingModel<
+        fdt::DAPHNEEthTypeAdapter,
+        rol::DefaultSkipListRequestHandler<fdt::DAPHNEEthTypeAdapter>,
+        rol::SkipListLatencyBufferModel<fdt::DAPHNEEthTypeAdapter>,
+        fdl::DAPHNEEthFrameProcessor>>(run_marker);
+    register_node("DAPHNEEthFrameProcessor", readout_model);
     readout_model->init(modconf);
     return readout_model;
   }

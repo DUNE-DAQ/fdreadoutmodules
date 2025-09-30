@@ -9,6 +9,7 @@
 #include "fdreadoutlibs/DUNEWIBEthTypeAdapter.hpp"
 #include "fdreadoutlibs/TDEEthFrameTypeAdapter.hpp"
 #include "fdreadoutlibs/DAPHNESuperChunkTypeAdapter.hpp"
+#include "fdreadoutlibs/DAPHNEEthTypeAdapter.hpp"
 
 #include "datahandlinglibs/ReadoutLogging.hpp"
 #include "datahandlinglibs/models/RecorderModel.hpp"
@@ -71,6 +72,14 @@ DataRecorderModule::init(const data_t& args)
     if (raw_dt.find("PDSFrame") != std::string::npos) {
       TLOG_DEBUG(TLVL_WORK_STEPS) << "Creating recorder for pds";
       recorder.reset(new datahandlinglibs::RecorderModel<fdreadoutlibs::types::DAPHNESuperChunkTypeAdapter>(get_name()));
+      recorder->init(args);
+      return;
+    }
+
+    // IF PDSEth
+    if (raw_dt.find("DAPHNEEthFrame") != std::string::npos) {
+      TLOG_DEBUG(TLVL_WORK_STEPS) << "Creating recorder for pds";
+      recorder.reset(new datahandlinglibs::RecorderModel<fdreadoutlibs::types::DAPHNEEthTypeAdapter>(get_name()));
       recorder->init(args);
       return;
     }
