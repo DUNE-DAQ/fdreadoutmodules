@@ -35,15 +35,15 @@ public:
   DataRecorderModule(DataRecorderModule&&) = delete;
   DataRecorderModule& operator=(DataRecorderModule&&) = delete;
 
-  void init(const nlohmann::json& obj) override;
+  void init(const CommandData_t& obj) override;
 protected:
   void generate_opmon_data() override;
 private:
   // Commands
-  void do_conf(const nlohmann::json& obj);
-  void do_scrap(const nlohmann::json& obj);
-  void do_start(const nlohmann::json& obj);
-  void do_stop(const nlohmann::json& obj);
+  void do_conf(const CommandData_t& obj);
+  void do_scrap(const CommandData_t& obj);
+  void do_start(const CommandData_t& obj);
+  void do_stop(const CommandData_t& obj);
 
   std::shared_ptr<datahandlinglibs::RecorderConcept> recorder;
 };
