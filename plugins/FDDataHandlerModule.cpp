@@ -29,6 +29,7 @@
 #include "fdreadoutlibs/DAPHNEStreamSuperChunkTypeAdapter.hpp"
 #include "fdreadoutlibs/TDEEthTypeAdapter.hpp"
 #include "fdreadoutlibs/DAPHNEEthTypeAdapter.hpp"
+#include "fdreadoutlibs/DAPHNEEthStreamTypeAdapter.hpp"
 
 #include "fdreadoutlibs/daphne/DAPHNEFrameProcessor.hpp"
 #include "fdreadoutlibs/daphne/DAPHNEStreamFrameProcessor.hpp"
@@ -37,6 +38,7 @@
 #include "fdreadoutlibs/crt/CRTBernFrameProcessor.hpp"
 #include "fdreadoutlibs/crt/CRTGrenobleFrameProcessor.hpp"
 #include "fdreadoutlibs/daphneeth/DAPHNEEthFrameProcessor.hpp"
+#include "fdreadoutlibs/daphneeth/DAPHNEEthStreamFrameProcessor.hpp"
 
 #include <memory>
 #include <sstream>
@@ -54,6 +56,7 @@ DUNE_DAQ_TYPESTRING(dunedaq::fdreadoutlibs::types::TDEEthTypeAdapter, "TDEEthFra
 DUNE_DAQ_TYPESTRING(dunedaq::fdreadoutlibs::types::CRTBernTypeAdapter, "CRTBernFrame")
 DUNE_DAQ_TYPESTRING(dunedaq::fdreadoutlibs::types::CRTGrenobleTypeAdapter, "CRTGrenobleFrame")
 DUNE_DAQ_TYPESTRING(dunedaq::fdreadoutlibs::types::DAPHNEEthTypeAdapter, "DAPHNEEthFrame")
+DUNE_DAQ_TYPESTRING(dunedaq::fdreadoutlibs::types::DAPHNEEthStreamTypeAdapter, "DAPHNEEthStreamFrame")
 
 namespace fdreadoutmodules {
 
@@ -199,6 +202,19 @@ FDDataHandlerModule::create_readout(const appmodel::DataHandlerModule* modconf, 
     return readout_model;
   }
 
+  // IF PDS Stream Frame using SPSC LB
+  if (raw_dt.find("DAPHNEEthStreamFrame") != std::string::npos) {
+    TLOG_DEBUG(TLVL_WORK_STEPS) << "Creating readout for a DAPHNE eth stream mode using BinarySearchQueue LB";
+    auto readout_model = std::make_shared<
+      rol::DataHandlingModel<fdt::DAPHNEEthStreamTypeAdapter,
+                        rol::DefaultRequestHandlerModel<fdt::DAPHNEEthStreamTypeAdapter,
+                        rol::BinarySearchQueueModel<fdt::DAPHNEEthStreamTypeAdapter>>,
+                        rol::BinarySearchQueueModel<fdt::DAPHNEEthStreamTypeAdapter>,
+                        fdl::DAPHNEEthStreamFrameProcessor>>(run_marker);
+    register_node("DAPHNEEthStreamFrameProcessor", readout_model);
+    readout_model->init(modconf);
+    return readout_model;
+  }
   return nullptr;
 }
 
