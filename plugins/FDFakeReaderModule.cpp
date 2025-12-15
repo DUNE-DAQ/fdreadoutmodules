@@ -25,6 +25,7 @@
 #include "fdreadoutlibs/CRTBernTypeAdapter.hpp"
 #include "fdreadoutlibs/CRTGrenobleTypeAdapter.hpp"
 #include "fdreadoutlibs/DAPHNEEthTypeAdapter.hpp"
+#include "fdreadoutlibs/DAPHNEEthStreamTypeAdapter.hpp"
 
 #include <chrono>
 #include <fstream>
@@ -88,6 +89,11 @@ FDFakeReaderModule::create_source_emulator(std::string q_id, std::atomic<bool>& 
   static constexpr double daphneeth_dropout_rate = 0.0;
   static constexpr double daphneeth_rate_khz = 62500./daphneeth_time_tick_diff;
   static constexpr int daphneeth_frames_per_tick = 1;
+
+  static constexpr int daphneethstream_time_tick_diff = fdreadoutlibs::types::DAPHNEEthStreamTypeAdapter::expected_tick_difference;
+  static constexpr double daphneethstream_dropout_rate = 0.0;
+  static constexpr double daphneethstream_rate_khz = 62500./daphneethstream_time_tick_diff/fdreadoutlibs::types::kDAPHNEEthStreamNumFrames;
+  static constexpr int daphneethstream_frames_per_tick = 1;
 
   static constexpr int wibeth_time_tick_diff = fdreadoutlibs::types::DUNEWIBEthTypeAdapter::expected_tick_difference;;
   static constexpr double wibeth_dropout_rate = 0.0;
@@ -156,6 +162,16 @@ FDFakeReaderModule::create_source_emulator(std::string q_id, std::atomic<bool>& 
     auto source_emu_model =
       std::make_shared<datahandlinglibs::SourceEmulatorModel<fdreadoutlibs::types::DAPHNEStreamSuperChunkTypeAdapter>>(
         q_id, run_marker, daphnestream_time_tick_diff, daphnestream_dropout_rate, emu_frame_error_rate, daphnestream_rate_khz, daphnestream_frames_per_tick);
+      register_node(q_id, source_emu_model);
+    return source_emu_model;
+  }
+
+  // IF PDS Eth Stream
+  if (raw_dt.find("DAPHNEEthStreamFrame") != std::string::npos) {
+    TLOG_DEBUG(TLVL_WORK_STEPS) << "Creating fake pds stream link";
+    auto source_emu_model =
+      std::make_shared<datahandlinglibs::SourceEmulatorModel<fdreadoutlibs::types::DAPHNEEthStreamTypeAdapter>>(
+        q_id, run_marker, daphneethstream_time_tick_diff, daphneethstream_dropout_rate, emu_frame_error_rate, daphneethstream_rate_khz, daphneethstream_frames_per_tick);
       register_node(q_id, source_emu_model);
     return source_emu_model;
   }
