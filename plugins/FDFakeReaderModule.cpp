@@ -71,7 +71,7 @@ FDFakeReaderModule::init(std::shared_ptr<appfwk::ConfigurationManager> cfg)
 }
 
 std::shared_ptr<datahandlinglibs::SourceEmulatorConcept>
-FDFakeReaderModule::create_source_emulator(const appmodel::RawDataCallbackConf* conf, std::atomic<bool>& run_marker)
+FDFakeReaderModule::create_source_emulator(const appmodel::DataMoveCallbackConf* conf, std::atomic<bool>& run_marker)
 {
   //! Values suitable to emulation
 
