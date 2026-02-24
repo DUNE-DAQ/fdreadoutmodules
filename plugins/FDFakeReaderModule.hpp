@@ -42,7 +42,7 @@ public:
   void init(std::shared_ptr<appfwk::ConfigurationManager> cfg) override;
 
   std::shared_ptr<datahandlinglibs::SourceEmulatorConcept>
-  create_source_emulator(std::string qi, std::atomic<bool>& run_marker) override;
+  create_source_emulator(const appmodel::DataMoveCallbackConf*, std::atomic<bool>& run_marker) override;
 
 };
 

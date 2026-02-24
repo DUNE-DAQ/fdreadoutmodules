@@ -71,7 +71,7 @@ FDFakeReaderModule::init(std::shared_ptr<appfwk::ConfigurationManager> cfg)
 }
 
 std::shared_ptr<datahandlinglibs::SourceEmulatorConcept>
-FDFakeReaderModule::create_source_emulator(std::string q_id, std::atomic<bool>& run_marker)
+FDFakeReaderModule::create_source_emulator(const appmodel::DataMoveCallbackConf* conf, std::atomic<bool>& run_marker)
 {
   //! Values suitable to emulation
 
@@ -113,104 +113,141 @@ FDFakeReaderModule::create_source_emulator(std::string q_id, std::atomic<bool>& 
   static constexpr int crtgrenoble_time_tick_diff = 625;
   static constexpr double crtgrenoble_dropout_rate = 0.0;
   static constexpr double crtgrenoble_rate_khz = 100;
-  static constexpr int crtgrenoble_frames_per_tick = 1;  
+  static constexpr int crtgrenoble_frames_per_tick = 1;
 
   static constexpr double emu_frame_error_rate = 0.0;
 
-  auto datatypes = dunedaq::iomanager::IOManager::get()->get_datatypes(q_id);
-  if (datatypes.size() != 1) {
-    ers::error(dunedaq::datahandlinglibs::GenericConfigurationError(ERS_HERE,
-      "Multiple output data types specified! Expected only a single type!"));
-  }
-  std::string raw_dt{ *datatypes.begin() };
+  auto datatype = conf->get_data_type();
   TLOG() << "Choosing specialization for SourceEmulator with raw_input"
-         << " [uid:" << q_id << " , data_type:" << raw_dt << ']';
+         << " [uid:" << conf->UID() << " , data_type:" << datatype << ']';
 
   // IF WIBETH
-  if (raw_dt.find("WIBEthFrame") != std::string::npos) {
+  if (datatype.find("WIBEthFrame") != std::string::npos) {
     TLOG_DEBUG(TLVL_WORK_STEPS) << "Creating fake wibeth link";
     auto source_emu_model =
       std::make_shared<datahandlinglibs::SourceEmulatorModel<fdreadoutlibs::types::DUNEWIBEthTypeAdapter>>(
-        q_id, run_marker, wibeth_time_tick_diff, wibeth_dropout_rate, emu_frame_error_rate, wibeth_rate_khz, wibeth_frames_per_tick);
-    register_node(q_id, source_emu_model);
+        conf->UID(),
+        run_marker,
+        wibeth_time_tick_diff,
+        wibeth_dropout_rate,
+        emu_frame_error_rate,
+        wibeth_rate_khz,
+        wibeth_frames_per_tick);
+    register_node(conf->UID(), source_emu_model);
     return source_emu_model;
   }
 
   // IF PDS
-  if (raw_dt.find("PDSFrame") != std::string::npos) {
+  if (datatype.find("PDSFrame") != std::string::npos) {
     TLOG_DEBUG(TLVL_WORK_STEPS) << "Creating fake pds link";
     auto source_emu_model =
       std::make_shared<datahandlinglibs::SourceEmulatorModel<fdreadoutlibs::types::DAPHNESuperChunkTypeAdapter>>(
-        q_id, run_marker, daphne_time_tick_diff, daphne_dropout_rate, emu_frame_error_rate, daphne_rate_khz, daphne_frames_per_tick);
-      register_node(q_id, source_emu_model);
+        conf->UID(),
+        run_marker,
+        daphne_time_tick_diff,
+        daphne_dropout_rate,
+        emu_frame_error_rate,
+        daphne_rate_khz,
+        daphne_frames_per_tick);
+    register_node(conf->UID(), source_emu_model);
       return source_emu_model;
   }
 
   // IF PDS Ethernet
-  if (raw_dt.find("DAPHNEEthFrame") != std::string::npos) {
+  if (datatype.find("DAPHNEEthFrame") != std::string::npos) {
     TLOG_DEBUG(TLVL_WORK_STEPS) << "Creating fake pds link";
     auto source_emu_model =
       std::make_shared<datahandlinglibs::SourceEmulatorModel<fdreadoutlibs::types::DAPHNEEthTypeAdapter>>(
-        q_id, run_marker, daphneeth_time_tick_diff, daphneeth_dropout_rate, emu_frame_error_rate, daphneeth_rate_khz, daphneeth_frames_per_tick);
-      register_node(q_id, source_emu_model);
+        conf->UID(),
+        run_marker,
+        daphneeth_time_tick_diff,
+        daphneeth_dropout_rate,
+        emu_frame_error_rate,
+        daphneeth_rate_khz,
+        daphneeth_frames_per_tick);
+    register_node(conf->UID(), source_emu_model);
       return source_emu_model;
   }
 
   // IF PDSStream
-  if (raw_dt.find("PDSStreamFrame") != std::string::npos) {
+  if (datatype.find("PDSStreamFrame") != std::string::npos) {
     TLOG_DEBUG(TLVL_WORK_STEPS) << "Creating fake pds stream link";
     auto source_emu_model =
       std::make_shared<datahandlinglibs::SourceEmulatorModel<fdreadoutlibs::types::DAPHNEStreamSuperChunkTypeAdapter>>(
-        q_id, run_marker, daphnestream_time_tick_diff, daphnestream_dropout_rate, emu_frame_error_rate, daphnestream_rate_khz, daphnestream_frames_per_tick);
-      register_node(q_id, source_emu_model);
+        conf->UID(),
+        run_marker,
+        daphnestream_time_tick_diff,
+        daphnestream_dropout_rate,
+        emu_frame_error_rate,
+        daphnestream_rate_khz,
+        daphnestream_frames_per_tick);
+    register_node(conf->UID(), source_emu_model);
     return source_emu_model;
   }
 
   // IF PDS Eth Stream
-  if (raw_dt.find("DAPHNEEthStreamFrame") != std::string::npos) {
+  if (datatype.find("DAPHNEEthStreamFrame") != std::string::npos) {
     TLOG_DEBUG(TLVL_WORK_STEPS) << "Creating fake pds stream link";
     auto source_emu_model =
       std::make_shared<datahandlinglibs::SourceEmulatorModel<fdreadoutlibs::types::DAPHNEEthStreamTypeAdapter>>(
-        q_id, run_marker, daphneethstream_time_tick_diff, daphneethstream_dropout_rate, emu_frame_error_rate, daphneethstream_rate_khz, daphneethstream_frames_per_tick);
-      register_node(q_id, source_emu_model);
+        conf->UID(),
+        run_marker,
+        daphneethstream_time_tick_diff,
+        daphneethstream_dropout_rate,
+        emu_frame_error_rate,
+        daphneethstream_rate_khz,
+        daphneethstream_frames_per_tick);
+    register_node(conf->UID(), source_emu_model);
     return source_emu_model;
   }
 
   // IF TDEEth
-  if (raw_dt.find("TDEEthFrame") != std::string::npos) {
+  if (datatype.find("TDEEthFrame") != std::string::npos) {
     TLOG_DEBUG(TLVL_WORK_STEPS) << "Creating fake tde link";
     auto source_emu_model =
       std::make_shared<datahandlinglibs::SourceEmulatorModel<fdreadoutlibs::types::TDEEthTypeAdapter>>(
-        q_id,
+        conf->UID(),
         run_marker,
         tdeeth_time_tick_diff,
         tdeeth_dropout_rate,
         emu_frame_error_rate,
         tdeeth_rate_khz,
         tdeeth_frames_per_tick);
-    register_node(q_id, source_emu_model);
+    register_node(conf->UID(), source_emu_model);
     return source_emu_model;
   }
 
   // IF CRTBern
-  if (raw_dt.find("CRTBernFrame") != std::string::npos) {
+  if (datatype.find("CRTBernFrame") != std::string::npos) {
     TLOG_DEBUG(TLVL_WORK_STEPS) << "Creating fake crt bern link";
     auto source_emu_model =
       std::make_shared<datahandlinglibs::SourceEmulatorModel<fdreadoutlibs::types::CRTBernTypeAdapter>>(
-        q_id, run_marker, crtbern_time_tick_diff, crtbern_dropout_rate, emu_frame_error_rate, crtbern_rate_khz, crtbern_frames_per_tick);
-    register_node(q_id, source_emu_model);
+        conf->UID(),
+        run_marker,
+        crtbern_time_tick_diff,
+        crtbern_dropout_rate,
+        emu_frame_error_rate,
+        crtbern_rate_khz,
+        crtbern_frames_per_tick);
+    register_node(conf->UID(), source_emu_model);
     return source_emu_model;
-  }  
-  
+  }
+
   // IF CRTGrenoble
-  if (raw_dt.find("CRTGrenobleFrame") != std::string::npos) {
+  if (datatype.find("CRTGrenobleFrame") != std::string::npos) {
     TLOG_DEBUG(TLVL_WORK_STEPS) << "Creating fake crt grenoble link";
     auto source_emu_model =
       std::make_shared<datahandlinglibs::SourceEmulatorModel<fdreadoutlibs::types::CRTGrenobleTypeAdapter>>(
-        q_id, run_marker, crtgrenoble_time_tick_diff, crtgrenoble_dropout_rate, emu_frame_error_rate, crtgrenoble_rate_khz, crtgrenoble_frames_per_tick);
-    register_node(q_id, source_emu_model);
+        conf->UID(),
+        run_marker,
+        crtgrenoble_time_tick_diff,
+        crtgrenoble_dropout_rate,
+        emu_frame_error_rate,
+        crtgrenoble_rate_khz,
+        crtgrenoble_frames_per_tick);
+    register_node(conf->UID(), source_emu_model);
     return source_emu_model;
-  }  
+  }
 
   return nullptr;
 }
