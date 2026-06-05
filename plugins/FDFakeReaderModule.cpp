@@ -105,14 +105,14 @@ FDFakeReaderModule::create_source_emulator(const appmodel::DataMoveCallbackConf*
   static constexpr double tdeeth_rate_khz = 62500./tdeeth_time_tick_diff;
   static constexpr int tdeeth_frames_per_tick = 1;
 
-  static constexpr int crtbern_time_tick_diff = 625;
+  static constexpr int crtbern_time_tick_diff = 2500;
   static constexpr double crtbern_dropout_rate = 0.0;
-  static constexpr double crtbern_rate_khz = 100;
+  static constexpr double crtbern_rate_khz = 25;
   static constexpr int crtbern_frames_per_tick = 1;
 
-  static constexpr int crtgrenoble_time_tick_diff = 625;
+  static constexpr int crtgrenoble_time_tick_diff = 2500;
   static constexpr double crtgrenoble_dropout_rate = 0.0;
-  static constexpr double crtgrenoble_rate_khz = 100;
+  static constexpr double crtgrenoble_rate_khz = 25;
   static constexpr int crtgrenoble_frames_per_tick = 1;
 
   static constexpr double emu_frame_error_rate = 0.0;
