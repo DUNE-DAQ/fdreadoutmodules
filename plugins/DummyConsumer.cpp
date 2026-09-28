@@ -45,7 +45,7 @@ DummyConsumer<T>::init(const data_t& args)
 
 template<class T>
 void
-DummyConsumer<T>::generate_opmon_data() 
+DummyConsumer<T>::generate_opmon_data()
 {
   opmon::DummyConsumerInfo info;
   info.set_packets_processed = m_packets_processed;

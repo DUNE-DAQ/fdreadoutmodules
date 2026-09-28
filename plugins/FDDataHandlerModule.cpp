@@ -9,36 +9,36 @@
 
 #include "datahandlinglibs/opmon/datahandling_info.pb.h"
 
-#include "logging/Logging.hpp"
 #include "iomanager/IOManager.hpp"
+#include "logging/Logging.hpp"
 
 #include "datahandlinglibs/DataHandlingIssues.hpp"
 #include "datahandlinglibs/ReadoutLogging.hpp"
 #include "datahandlinglibs/concepts/DataHandlingConcept.hpp"
 #include "datahandlinglibs/models/BinarySearchQueueModel.hpp"
+#include "datahandlinglibs/models/DataHandlingModel.hpp"
 #include "datahandlinglibs/models/DefaultRequestHandlerModel.hpp"
+#include "datahandlinglibs/models/DefaultSkipListRequestHandler.hpp"
 #include "datahandlinglibs/models/EmptyFragmentRequestHandlerModel.hpp"
 #include "datahandlinglibs/models/FixedRateQueueModel.hpp"
-#include "datahandlinglibs/models/DataHandlingModel.hpp"
-#include "datahandlinglibs/models/ZeroCopyRecordingRequestHandlerModel.hpp"
-#include "datahandlinglibs/models/DefaultSkipListRequestHandler.hpp"
 #include "datahandlinglibs/models/SkipListLatencyBufferModel.hpp"
+#include "datahandlinglibs/models/ZeroCopyRecordingRequestHandlerModel.hpp"
 
-#include "fdreadoutlibs/DUNEWIBEthTypeAdapter.hpp"
-#include "fdreadoutlibs/DAPHNESuperChunkTypeAdapter.hpp"
-#include "fdreadoutlibs/DAPHNEStreamSuperChunkTypeAdapter.hpp"
-#include "fdreadoutlibs/TDEEthTypeAdapter.hpp"
-#include "fdreadoutlibs/DAPHNEEthTypeAdapter.hpp"
 #include "fdreadoutlibs/DAPHNEEthStreamTypeAdapter.hpp"
+#include "fdreadoutlibs/DAPHNEEthTypeAdapter.hpp"
+#include "fdreadoutlibs/DAPHNEStreamSuperChunkTypeAdapter.hpp"
+#include "fdreadoutlibs/DAPHNESuperChunkTypeAdapter.hpp"
+#include "fdreadoutlibs/DUNEWIBEthTypeAdapter.hpp"
+#include "fdreadoutlibs/TDEEthTypeAdapter.hpp"
 
-#include "fdreadoutlibs/daphne/DAPHNEFrameProcessor.hpp"
-#include "fdreadoutlibs/daphne/DAPHNEStreamFrameProcessor.hpp"
-#include "fdreadoutlibs/wibeth/WIBEthFrameProcessor.hpp"
-#include "fdreadoutlibs/tde/TDEEthFrameProcessor.hpp"
 #include "fdreadoutlibs/crt/CRTBernFrameProcessor.hpp"
 #include "fdreadoutlibs/crt/CRTGrenobleFrameProcessor.hpp"
+#include "fdreadoutlibs/daphne/DAPHNEFrameProcessor.hpp"
+#include "fdreadoutlibs/daphne/DAPHNEStreamFrameProcessor.hpp"
 #include "fdreadoutlibs/daphneeth/DAPHNEEthFrameProcessor.hpp"
 #include "fdreadoutlibs/daphneeth/DAPHNEEthStreamFrameProcessor.hpp"
+#include "fdreadoutlibs/tde/TDEEthFrameProcessor.hpp"
+#include "fdreadoutlibs/wibeth/WIBEthFrameProcessor.hpp"
 
 #include <memory>
 #include <sstream>
@@ -63,7 +63,7 @@ namespace fdreadoutmodules {
 FDDataHandlerModule::FDDataHandlerModule(const std::string& name)
   : DAQModule(name)
   , RawDataHandlerBase(name)
-{ 
+{
 
   inherited_mod::register_command("conf", &inherited_dlh::do_conf);
   inherited_mod::register_command("scrap", &inherited_dlh::do_scrap);
@@ -81,11 +81,10 @@ FDDataHandlerModule::init(std::shared_ptr<appfwk::ConfigurationManager> cfg)
   TLOG_DEBUG(TLVL_ENTER_EXIT_METHODS) << get_name() << ": Exiting init() method";
 }
 
-  
- void
- FDDataHandlerModule::generate_opmon_data()
- {
- }
+void
+FDDataHandlerModule::generate_opmon_data()
+{
+}
 
 std::shared_ptr<datahandlinglibs::DataHandlingConcept>
 FDDataHandlerModule::create_readout(const appmodel::DataHandlerModule* modconf, std::atomic<bool>& run_marker)
@@ -93,38 +92,33 @@ FDDataHandlerModule::create_readout(const appmodel::DataHandlerModule* modconf, 
   namespace rol = dunedaq::datahandlinglibs;
   namespace fdl = dunedaq::fdreadoutlibs;
   namespace fdt = dunedaq::fdreadoutlibs::types;
-  
 
-  // Acquire DataType  
+  // Acquire DataType
   std::string raw_dt = modconf->get_module_configuration()->get_input_data_type();
   TLOG() << "Choosing specializations for DataHandlingModel with data_type:" << raw_dt << ']';
 
   // IF WIBEth
   if (raw_dt.find("WIBEthFrame") != std::string::npos) {
     TLOG_DEBUG(TLVL_WORK_STEPS) << "Creating readout for an Ethernet DUNE-WIB";
-    auto readout_model = std::make_shared<
-      rol::DataHandlingModel<fdt::DUNEWIBEthTypeAdapter,
-      rol::ZeroCopyRecordingRequestHandlerModel<
-        fdt::DUNEWIBEthTypeAdapter,
-        rol::FixedRateQueueModel<fdt::DUNEWIBEthTypeAdapter>
-      >,
+    auto readout_model = std::make_shared<rol::DataHandlingModel<
+      fdt::DUNEWIBEthTypeAdapter,
+      rol::ZeroCopyRecordingRequestHandlerModel<fdt::DUNEWIBEthTypeAdapter,
+                                                rol::FixedRateQueueModel<fdt::DUNEWIBEthTypeAdapter>>,
       rol::FixedRateQueueModel<fdt::DUNEWIBEthTypeAdapter>,
-      fdl::WIBEthFrameProcessor
-      >>(run_marker);
+      fdl::WIBEthFrameProcessor>>(run_marker);
     register_node("WIBEthFrameProcessor", readout_model);
     readout_model->init(modconf);
     return readout_model;
   }
-  
+
   // IF CRTBern
   if (raw_dt.find("CRTBernFrame") != std::string::npos) {
     TLOG_DEBUG(TLVL_WORK_STEPS) << "Creating readout for a CRTBern";
-    auto readout_model = std::make_shared<
-      rol::DataHandlingModel<fdt::CRTBernTypeAdapter,
-      rol::DefaultSkipListRequestHandler<fdt::CRTBernTypeAdapter>,
-      rol::SkipListLatencyBufferModel<fdt::CRTBernTypeAdapter>,
-      fdl::CRTBernFrameProcessor
-      >>(run_marker);
+    auto readout_model =
+      std::make_shared<rol::DataHandlingModel<fdt::CRTBernTypeAdapter,
+                                              rol::DefaultSkipListRequestHandler<fdt::CRTBernTypeAdapter>,
+                                              rol::SkipListLatencyBufferModel<fdt::CRTBernTypeAdapter>,
+                                              fdl::CRTBernFrameProcessor>>(run_marker);
     register_node("CRTBernFrameProcessor", readout_model);
     readout_model->init(modconf);
     return readout_model;
@@ -133,30 +127,25 @@ FDDataHandlerModule::create_readout(const appmodel::DataHandlerModule* modconf, 
   // IF CRTGrenoble
   if (raw_dt.find("CRTGrenobleFrame") != std::string::npos) {
     TLOG_DEBUG(TLVL_WORK_STEPS) << "Creating readout for a CRTGrenoble";
-    auto readout_model = std::make_shared<
-      rol::DataHandlingModel<fdt::CRTGrenobleTypeAdapter,
-      rol::DefaultSkipListRequestHandler<fdt::CRTGrenobleTypeAdapter>,
-      rol::SkipListLatencyBufferModel<fdt::CRTGrenobleTypeAdapter>,
-      fdl::CRTGrenobleFrameProcessor
-      >>(run_marker);
+    auto readout_model =
+      std::make_shared<rol::DataHandlingModel<fdt::CRTGrenobleTypeAdapter,
+                                              rol::DefaultSkipListRequestHandler<fdt::CRTGrenobleTypeAdapter>,
+                                              rol::SkipListLatencyBufferModel<fdt::CRTGrenobleTypeAdapter>,
+                                              fdl::CRTGrenobleFrameProcessor>>(run_marker);
     register_node("CRTGrenobleFrameProcessor", readout_model);
     readout_model->init(modconf);
     return readout_model;
-  }  
+  }
 
   // IF TDEEth
   if (raw_dt.find("TDEEthFrame") != std::string::npos) {
     TLOG_DEBUG(TLVL_WORK_STEPS) << "Creating readout for an Ethernet TDEEth";
-    auto readout_model = 
-      std::make_shared<rol::DataHandlingModel<
-        fdt::TDEEthTypeAdapter,
-        rol::ZeroCopyRecordingRequestHandlerModel<
-          fdt::TDEEthTypeAdapter,
-          rol::FixedRateQueueModel<fdt::TDEEthTypeAdapter>
-        >,
-        rol::FixedRateQueueModel<fdt::TDEEthTypeAdapter>,
-        fdl::TDEEthFrameProcessor
-      >>(run_marker);
+    auto readout_model = std::make_shared<rol::DataHandlingModel<
+      fdt::TDEEthTypeAdapter,
+      rol::ZeroCopyRecordingRequestHandlerModel<fdt::TDEEthTypeAdapter,
+                                                rol::FixedRateQueueModel<fdt::TDEEthTypeAdapter>>,
+      rol::FixedRateQueueModel<fdt::TDEEthTypeAdapter>,
+      fdl::TDEEthFrameProcessor>>(run_marker);
     register_node("TDEEthFrameProcessor", readout_model);
     readout_model->init(modconf);
     return readout_model;
@@ -165,11 +154,11 @@ FDDataHandlerModule::create_readout(const appmodel::DataHandlerModule* modconf, 
   // IF PDS Frame using skiplist
   if (raw_dt.find("PDSFrame") != std::string::npos) {
     TLOG_DEBUG(TLVL_WORK_STEPS) << "Creating readout for a PDS DAPHNE using SkipList LB";
-    auto readout_model = std::make_shared<rol::DataHandlingModel<
-        fdt::DAPHNESuperChunkTypeAdapter,
-        rol::DefaultSkipListRequestHandler<fdt::DAPHNESuperChunkTypeAdapter>,
-        rol::SkipListLatencyBufferModel<fdt::DAPHNESuperChunkTypeAdapter>,
-        fdl::DAPHNEFrameProcessor>>(run_marker);
+    auto readout_model =
+      std::make_shared<rol::DataHandlingModel<fdt::DAPHNESuperChunkTypeAdapter,
+                                              rol::DefaultSkipListRequestHandler<fdt::DAPHNESuperChunkTypeAdapter>,
+                                              rol::SkipListLatencyBufferModel<fdt::DAPHNESuperChunkTypeAdapter>,
+                                              fdl::DAPHNEFrameProcessor>>(run_marker);
     register_node("PDSFrameProcessor", readout_model);
     readout_model->init(modconf);
     return readout_model;
@@ -178,11 +167,11 @@ FDDataHandlerModule::create_readout(const appmodel::DataHandlerModule* modconf, 
   // IF PDS Frame using skiplist
   if (raw_dt.find("DAPHNEEthFrame") != std::string::npos) {
     TLOG_DEBUG(TLVL_WORK_STEPS) << "Creating readout for a PDS DAPHNE Ethernet using SkipList LB";
-    auto readout_model = std::make_shared<rol::DataHandlingModel<
-        fdt::DAPHNEEthTypeAdapter,
-        rol::DefaultSkipListRequestHandler<fdt::DAPHNEEthTypeAdapter>,
-        rol::SkipListLatencyBufferModel<fdt::DAPHNEEthTypeAdapter>,
-        fdl::DAPHNEEthFrameProcessor>>(run_marker);
+    auto readout_model =
+      std::make_shared<rol::DataHandlingModel<fdt::DAPHNEEthTypeAdapter,
+                                              rol::DefaultSkipListRequestHandler<fdt::DAPHNEEthTypeAdapter>,
+                                              rol::SkipListLatencyBufferModel<fdt::DAPHNEEthTypeAdapter>,
+                                              fdl::DAPHNEEthFrameProcessor>>(run_marker);
     register_node("DAPHNEEthFrameProcessor", readout_model);
     readout_model->init(modconf);
     return readout_model;
@@ -191,12 +180,12 @@ FDDataHandlerModule::create_readout(const appmodel::DataHandlerModule* modconf, 
   // IF PDS Stream Frame using SPSC LB
   if (raw_dt.find("PDSStreamFrame") != std::string::npos) {
     TLOG_DEBUG(TLVL_WORK_STEPS) << "Creating readout for a PDS DAPHNE stream mode using BinarySearchQueue LB";
-    auto readout_model = std::make_shared<
-      rol::DataHandlingModel<fdt::DAPHNEStreamSuperChunkTypeAdapter,
-                        rol::DefaultRequestHandlerModel<fdt::DAPHNEStreamSuperChunkTypeAdapter,
-                        rol::BinarySearchQueueModel<fdt::DAPHNEStreamSuperChunkTypeAdapter>>,
-                        rol::BinarySearchQueueModel<fdt::DAPHNEStreamSuperChunkTypeAdapter>,
-                        fdl::DAPHNEStreamFrameProcessor>>(run_marker);
+    auto readout_model = std::make_shared<rol::DataHandlingModel<
+      fdt::DAPHNEStreamSuperChunkTypeAdapter,
+      rol::DefaultRequestHandlerModel<fdt::DAPHNEStreamSuperChunkTypeAdapter,
+                                      rol::BinarySearchQueueModel<fdt::DAPHNEStreamSuperChunkTypeAdapter>>,
+      rol::BinarySearchQueueModel<fdt::DAPHNEStreamSuperChunkTypeAdapter>,
+      fdl::DAPHNEStreamFrameProcessor>>(run_marker);
     register_node("PDSStreamFrameProcessor", readout_model);
     readout_model->init(modconf);
     return readout_model;
@@ -205,12 +194,12 @@ FDDataHandlerModule::create_readout(const appmodel::DataHandlerModule* modconf, 
   // IF PDS Stream Frame using SPSC LB
   if (raw_dt.find("DAPHNEEthStreamFrame") != std::string::npos) {
     TLOG_DEBUG(TLVL_WORK_STEPS) << "Creating readout for a DAPHNE eth stream mode using BinarySearchQueue LB";
-    auto readout_model = std::make_shared<
-      rol::DataHandlingModel<fdt::DAPHNEEthStreamTypeAdapter,
-                        rol::DefaultRequestHandlerModel<fdt::DAPHNEEthStreamTypeAdapter,
-                        rol::BinarySearchQueueModel<fdt::DAPHNEEthStreamTypeAdapter>>,
-                        rol::BinarySearchQueueModel<fdt::DAPHNEEthStreamTypeAdapter>,
-                        fdl::DAPHNEEthStreamFrameProcessor>>(run_marker);
+    auto readout_model = std::make_shared<rol::DataHandlingModel<
+      fdt::DAPHNEEthStreamTypeAdapter,
+      rol::DefaultRequestHandlerModel<fdt::DAPHNEEthStreamTypeAdapter,
+                                      rol::BinarySearchQueueModel<fdt::DAPHNEEthStreamTypeAdapter>>,
+      rol::BinarySearchQueueModel<fdt::DAPHNEEthStreamTypeAdapter>,
+      fdl::DAPHNEEthStreamFrameProcessor>>(run_marker);
     register_node("DAPHNEEthStreamFrameProcessor", readout_model);
     readout_model->init(modconf);
     return readout_model;

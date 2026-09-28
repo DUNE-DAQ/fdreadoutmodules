@@ -32,6 +32,7 @@ public:
   DummyModule& operator=(DummyModule&&) = delete;
 
   ~DummyModule() = default;
+
 protected:
   void generate_opmon_data() override;
 
@@ -43,16 +44,16 @@ private:
   // register an action that will be executed upon reception of the
   // command. do_conf is a very common example of this; in
   // DummyModule.cpp you would implement do_conf so that members of
-  // DummyModule get assigned values from a configuration passed as 
+  // DummyModule get assigned values from a configuration passed as
   // an argument and originating from the CCM system.
-  // To see an example of this value assignment, look at the implementation of 
+  // To see an example of this value assignment, look at the implementation of
   // do_conf in DummyModule.cpp
 
   void do_conf(const data_t&);
 
-  int m_some_configured_value { std::numeric_limits<int>::max() }; // Intentionally-ridiculous value pre-configuration
+  int m_some_configured_value{ std::numeric_limits<int>::max() }; // Intentionally-ridiculous value pre-configuration
 
-  // TO fdreadoutmodules DEVELOPERS: PLEASE DELETE THIS FOLLOWING COMMENT AFTER READING IT 
+  // TO fdreadoutmodules DEVELOPERS: PLEASE DELETE THIS FOLLOWING COMMENT AFTER READING IT
   // m_total_amount and m_amount_since_last_get_info_call are examples
   // of variables whose values get reported to OpMon
   // (https://github.com/mozilla/opmon) each time get_info() is
@@ -60,8 +61,8 @@ private:
   // runs and whose value we'd like to keep track of during running;
   // obviously you'd want to replace this "in real life"
 
-  std::atomic<int64_t> m_total_amount {0};
-  std::atomic<int>     m_amount_since_last_get_info_call {0};
+  std::atomic<int64_t> m_total_amount{ 0 };
+  std::atomic<int> m_amount_since_last_get_info_call{ 0 };
 };
 
 } // namespace dunedaq::fdreadoutmodules

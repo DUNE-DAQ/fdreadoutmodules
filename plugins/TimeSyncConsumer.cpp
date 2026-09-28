@@ -6,8 +6,8 @@
  * received with this code.
  */
 
-#include "DummyConsumer.hpp"
 #include "DummyConsumer.cpp"
+#include "DummyConsumer.hpp"
 #include "dfmessages/TimeSync.hpp"
 
 DEFINE_DUNE_DAQ_MODULE(dunedaq::fdreadoutmodules::DummyConsumer<dunedaq::dfmessages::TimeSync>)

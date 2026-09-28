@@ -36,8 +36,10 @@ public:
   DataRecorderModule& operator=(DataRecorderModule&&) = delete;
 
   void init(const CommandData_t& obj) override;
+
 protected:
   void generate_opmon_data() override;
+
 private:
   // Commands
   void do_conf(const CommandData_t& obj);

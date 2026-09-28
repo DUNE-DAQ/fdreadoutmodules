@@ -5,11 +5,11 @@
  * Licensing/copyright details are in the COPYING file that you should have
  * received with this code.
  */
-#include "fdreadoutlibs/DUNEWIBSuperChunkTypeAdapter.hpp"
-#include "fdreadoutlibs/DUNEWIBEthTypeAdapter.hpp"
-#include "fdreadoutlibs/TDEEthFrameTypeAdapter.hpp"
-#include "fdreadoutlibs/DAPHNESuperChunkTypeAdapter.hpp"
 #include "fdreadoutlibs/DAPHNEEthTypeAdapter.hpp"
+#include "fdreadoutlibs/DAPHNESuperChunkTypeAdapter.hpp"
+#include "fdreadoutlibs/DUNEWIBEthTypeAdapter.hpp"
+#include "fdreadoutlibs/DUNEWIBSuperChunkTypeAdapter.hpp"
+#include "fdreadoutlibs/TDEEthFrameTypeAdapter.hpp"
 
 #include "datahandlinglibs/ReadoutLogging.hpp"
 #include "datahandlinglibs/models/RecorderModel.hpp"
@@ -18,9 +18,9 @@
 #include "DataRecorderModule.hpp"
 #include "appfwk/DAQModuleHelper.hpp"
 
-//#include "appfwk/cmd/Nljs.hpp"
-#include "logging/Logging.hpp"
+// #include "appfwk/cmd/Nljs.hpp"
 #include "datahandlinglibs/DataHandlingIssues.hpp"
+#include "logging/Logging.hpp"
 #include <string>
 
 using namespace dunedaq::datahandlinglibs::logging;
@@ -42,11 +42,11 @@ DataRecorderModule::init(const data_t& args)
 {
   try {
     // Acquire input connection and its DataType
-    auto ci = appfwk::connection_index(args, {"raw_recording"});
+    auto ci = appfwk::connection_index(args, { "raw_recording" });
     auto datatypes = dunedaq::iomanager::IOManager::get()->get_datatypes(ci["raw_recording"]);
     if (datatypes.size() != 1) {
-    ers::error(dunedaq::datahandlinglibs::GenericConfigurationError(ERS_HERE,
-      "Multiple raw_recording queues specified! Expected only a single raw_dtance!"));
+      ers::error(dunedaq::datahandlinglibs::GenericConfigurationError(
+        ERS_HERE, "Multiple raw_recording queues specified! Expected only a single raw_dtance!"));
     }
     std::string raw_dt{ *datatypes.begin() };
     TLOG() << "Choosing specializations for RecorderModel with raw_recording"
@@ -55,7 +55,8 @@ DataRecorderModule::init(const data_t& args)
     // IF WIB2
     if (raw_dt.find("WIB2Frame") != std::string::npos) {
       TLOG_DEBUG(TLVL_WORK_STEPS) << "Creating recorder for wib2";
-      recorder.reset(new datahandlinglibs::RecorderModel<fdreadoutlibs::types::DUNEWIBSuperChunkTypeAdapter>(get_name()));
+      recorder.reset(
+        new datahandlinglibs::RecorderModel<fdreadoutlibs::types::DUNEWIBSuperChunkTypeAdapter>(get_name()));
       recorder->init(args);
       return;
     }
@@ -71,7 +72,8 @@ DataRecorderModule::init(const data_t& args)
     // IF PDS
     if (raw_dt.find("PDSFrame") != std::string::npos) {
       TLOG_DEBUG(TLVL_WORK_STEPS) << "Creating recorder for pds";
-      recorder.reset(new datahandlinglibs::RecorderModel<fdreadoutlibs::types::DAPHNESuperChunkTypeAdapter>(get_name()));
+      recorder.reset(
+        new datahandlinglibs::RecorderModel<fdreadoutlibs::types::DAPHNESuperChunkTypeAdapter>(get_name()));
       recorder->init(args);
       return;
     }
@@ -91,12 +93,13 @@ DataRecorderModule::init(const data_t& args)
       recorder->init(args);
       return;
     }
- 
 
-    throw datahandlinglibs::DataRecorderConfigurationError(ERS_HERE, "Could not create DataRecorderModule of type " + raw_dt);
+    throw datahandlinglibs::DataRecorderConfigurationError(ERS_HERE,
+                                                           "Could not create DataRecorderModule of type " + raw_dt);
 
   } catch (const ers::Issue& excpt) {
-    throw datahandlinglibs::DataRecorderModuleResourceQueueError(ERS_HERE, "Could not initialize queue", "raw_recording", "");
+    throw datahandlinglibs::DataRecorderModuleResourceQueueError(
+      ERS_HERE, "Could not initialize queue", "raw_recording", "");
   }
 }
 

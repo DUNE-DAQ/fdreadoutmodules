@@ -11,12 +11,11 @@
 
 #include "datahandlinglibs/ReadoutLogging.hpp"
 
-#include "DummyConsumer.hpp"
 #include "DummyConsumer.cpp"
+#include "DummyConsumer.hpp"
 #include "daqdataformats/Fragment.hpp"
-#include "fddetdataformats/WIBFrame.hpp"
 #include "fddetdataformats/DAPHNEFrame.hpp"
-
+#include "fddetdataformats/WIBFrame.hpp"
 
 #include <memory>
 #include <string>
@@ -31,7 +30,8 @@ class FragmentConsumer : public DummyConsumer<std::unique_ptr<dunedaq::daqdatafo
 public:
   explicit FragmentConsumer(const std::string name)
     : DummyConsumer<std::unique_ptr<dunedaq::daqdataformats::Fragment>>(name)
-  {}
+  {
+  }
 
   void packet_callback(std::unique_ptr<dunedaq::daqdataformats::Fragment>& packet) override
   {
@@ -50,13 +50,14 @@ public:
     } else if ((fragment.get_header().fragment_type ==
                 static_cast<daqdataformats::fragment_type_t>(daqdataformats::FragmentType::kProtoWIB)) ||
                (static_cast<fddetdataformats::WIBFrame*>(fragment.get_data())->get_wib_header()->sof == 0)) {
-      int num_frames = (fragment.get_size() - sizeof(daqdataformats::FragmentHeader)) / sizeof(fddetdataformats::WIBFrame);
+      int num_frames =
+        (fragment.get_size() - sizeof(daqdataformats::FragmentHeader)) / sizeof(fddetdataformats::WIBFrame);
       auto window_begin = fragment.get_header().window_begin;
       auto window_end = fragment.get_header().window_end;
 
       fddetdataformats::WIBFrame* first_frame = static_cast<fddetdataformats::WIBFrame*>(fragment.get_data());
-      fddetdataformats::WIBFrame* last_frame = reinterpret_cast<fddetdataformats::WIBFrame*>( // NOLINT
-        static_cast<char*>(fragment.get_data()) + (num_frames - 1) * sizeof(fddetdataformats::WIBFrame));                          // NOLINT
+      fddetdataformats::WIBFrame* last_frame = reinterpret_cast<fddetdataformats::WIBFrame*>(             // NOLINT
+        static_cast<char*>(fragment.get_data()) + (num_frames - 1) * sizeof(fddetdataformats::WIBFrame)); // NOLINT
 
       if (!((first_frame->get_timestamp() >= window_begin) && (first_frame->get_timestamp() < window_begin + 25))) {
         TLOG() << "First fragment not correctly aligned";
