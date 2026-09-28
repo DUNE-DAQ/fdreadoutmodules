@@ -10,8 +10,8 @@
 #define FDREADOUTMODULES_PLUGINS_DUMMYCONSUMER_HPP_
 
 #include "appfwk/DAQModule.hpp"
-#include "iomanager/IOManager.hpp"
 #include "dfmessages/TimeSync.hpp"
+#include "iomanager/IOManager.hpp"
 
 #include "utilities/ReusableThread.hpp"
 

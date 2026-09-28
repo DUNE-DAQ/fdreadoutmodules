@@ -24,7 +24,8 @@ DummyModule::DummyModule(const std::string& name)
 
 void
 DummyModule::init(const data_t& /* structured args */)
-{}
+{
+}
 
 void
 DummyModule::generate_opmon_data()

@@ -8,12 +8,12 @@
 #ifndef FDREADOUTMODULES_PLUGINS_FDFAKECARDREADER_HPP_
 #define FDREADOUTMODULES_PLUGINS_FDFAKECARDREADER_HPP_
 
-//#include "appfwk/cmd/Nljs.hpp"
-//#include "appfwk/app/Nljs.hpp"
-//#include "appfwk/cmd/Structs.hpp"
+// #include "appfwk/cmd/Nljs.hpp"
+// #include "appfwk/app/Nljs.hpp"
+// #include "appfwk/cmd/Structs.hpp"
 
-#include "appfwk/DAQModule.hpp"
 #include "appfwk/ConfigurationManager.hpp"
+#include "appfwk/DAQModule.hpp"
 
 #include "datahandlinglibs/FakeCardReaderBase.hpp"
 
@@ -22,8 +22,9 @@
 namespace dunedaq {
 namespace fdreadoutmodules {
 
-class FDFakeReaderModule : public dunedaq::appfwk::DAQModule,
-                         public dunedaq::datahandlinglibs::FakeCardReaderBase
+class FDFakeReaderModule
+  : public dunedaq::appfwk::DAQModule
+  , public dunedaq::datahandlinglibs::FakeCardReaderBase
 {
 public:
   using inherited_fcr = dunedaq::datahandlinglibs::FakeCardReaderBase;
@@ -41,9 +42,9 @@ public:
 
   void init(std::shared_ptr<appfwk::ConfigurationManager> cfg) override;
 
-  std::shared_ptr<datahandlinglibs::SourceEmulatorConcept>
-  create_source_emulator(const appmodel::DataMoveCallbackConf*, std::atomic<bool>& run_marker) override;
-
+  std::shared_ptr<datahandlinglibs::SourceEmulatorConcept> create_source_emulator(
+    const appmodel::DataMoveCallbackConf*,
+    std::atomic<bool>& run_marker) override;
 };
 
 } // namespace fdreadoutmodules

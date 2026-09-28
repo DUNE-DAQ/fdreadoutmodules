@@ -17,8 +17,9 @@
 namespace dunedaq {
 namespace fdreadoutmodules {
 
-class FDDataHandlerModule : public dunedaq::appfwk::DAQModule,
-                          public dunedaq::datahandlinglibs::RawDataHandlerBase
+class FDDataHandlerModule
+  : public dunedaq::appfwk::DAQModule
+  , public dunedaq::datahandlinglibs::RawDataHandlerBase
 {
 public:
   using inherited_dlh = dunedaq::datahandlinglibs::RawDataHandlerBase;
@@ -29,15 +30,16 @@ public:
    */
   explicit FDDataHandlerModule(const std::string& name);
 
-  FDDataHandlerModule(const FDDataHandlerModule&) = delete;            ///< FDDataHandlerModule is not copy-constructible
+  FDDataHandlerModule(const FDDataHandlerModule&) = delete; ///< FDDataHandlerModule is not copy-constructible
   FDDataHandlerModule& operator=(const FDDataHandlerModule&) = delete; ///< FDDataHandlerModule is not copy-assignable
-  FDDataHandlerModule(FDDataHandlerModule&&) = delete;                 ///< FDDataHandlerModule is not move-constructible
-  FDDataHandlerModule& operator=(FDDataHandlerModule&&) = delete;      ///< FDDataHandlerModule is not move-assignable
+  FDDataHandlerModule(FDDataHandlerModule&&) = delete;            ///< FDDataHandlerModule is not move-constructible
+  FDDataHandlerModule& operator=(FDDataHandlerModule&&) = delete; ///< FDDataHandlerModule is not move-assignable
 
   void init(std::shared_ptr<appfwk::ConfigurationManager> cfg) override;
 
-  std::shared_ptr<datahandlinglibs::DataHandlingConcept>
-  create_readout(const appmodel::DataHandlerModule* modconf, std::atomic<bool>& run_marker) override;
+  std::shared_ptr<datahandlinglibs::DataHandlingConcept> create_readout(const appmodel::DataHandlerModule* modconf,
+                                                                        std::atomic<bool>& run_marker) override;
+
 protected:
   void generate_opmon_data() override;
 };

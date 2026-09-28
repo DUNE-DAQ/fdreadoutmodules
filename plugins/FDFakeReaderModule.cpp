@@ -7,25 +7,25 @@
  */
 #include "FDFakeReaderModule.hpp"
 
-//#include "appfwk/app/Nljs.hpp"
-//#include "appfwk/cmd/Nljs.hpp"
+// #include "appfwk/app/Nljs.hpp"
+// #include "appfwk/cmd/Nljs.hpp"
 #include "logging/Logging.hpp"
 
-#include "datahandlinglibs/ReadoutLogging.hpp"
 #include "datahandlinglibs/DataHandlingIssues.hpp"
-//#include "datahandlinglibs/sourceemulatorconfig/Nljs.hpp"
-#include "datahandlinglibs/models/SourceEmulatorModel.hpp"
+#include "datahandlinglibs/ReadoutLogging.hpp"
+// #include "datahandlinglibs/sourceemulatorconfig/Nljs.hpp"
 #include "appmodel/DataReaderModule.hpp"
+#include "datahandlinglibs/models/SourceEmulatorModel.hpp"
 
-//#include "fdreadoutlibs/DUNEWIBSuperChunkTypeAdapter.hpp"
-#include "fdreadoutlibs/DUNEWIBEthTypeAdapter.hpp"
-#include "fdreadoutlibs/DAPHNESuperChunkTypeAdapter.hpp"
-#include "fdreadoutlibs/DAPHNEStreamSuperChunkTypeAdapter.hpp"
-#include "fdreadoutlibs/TDEEthTypeAdapter.hpp"
+// #include "fdreadoutlibs/DUNEWIBSuperChunkTypeAdapter.hpp"
 #include "fdreadoutlibs/CRTBernTypeAdapter.hpp"
 #include "fdreadoutlibs/CRTGrenobleTypeAdapter.hpp"
-#include "fdreadoutlibs/DAPHNEEthTypeAdapter.hpp"
 #include "fdreadoutlibs/DAPHNEEthStreamTypeAdapter.hpp"
+#include "fdreadoutlibs/DAPHNEEthTypeAdapter.hpp"
+#include "fdreadoutlibs/DAPHNEStreamSuperChunkTypeAdapter.hpp"
+#include "fdreadoutlibs/DAPHNESuperChunkTypeAdapter.hpp"
+#include "fdreadoutlibs/DUNEWIBEthTypeAdapter.hpp"
+#include "fdreadoutlibs/TDEEthTypeAdapter.hpp"
 
 #include <chrono>
 #include <fstream>
@@ -41,7 +41,7 @@ using namespace dunedaq::datahandlinglibs::logging;
 
 namespace dunedaq {
 
-//DUNE_DAQ_TYPESTRING(dunedaq::fdreadoutlibs::types::DUNEWIBSuperChunkTypeAdapter, "WIB2Frame")
+// DUNE_DAQ_TYPESTRING(dunedaq::fdreadoutlibs::types::DUNEWIBSuperChunkTypeAdapter, "WIB2Frame")
 DUNE_DAQ_TYPESTRING(dunedaq::fdreadoutlibs::types::DUNEWIBEthTypeAdapter, "WIBEthFrame")
 DUNE_DAQ_TYPESTRING(dunedaq::fdreadoutlibs::types::DAPHNESuperChunkTypeAdapter, "PDSFrame")
 DUNE_DAQ_TYPESTRING(dunedaq::fdreadoutlibs::types::DAPHNEStreamSuperChunkTypeAdapter, "PDSStreamFrame")
@@ -75,34 +75,40 @@ FDFakeReaderModule::create_source_emulator(const appmodel::DataMoveCallbackConf*
 {
   //! Values suitable to emulation
 
-  static constexpr int daphnestream_time_tick_diff = fdreadoutlibs::types::DAPHNEStreamSuperChunkTypeAdapter::expected_tick_difference;
+  static constexpr int daphnestream_time_tick_diff =
+    fdreadoutlibs::types::DAPHNEStreamSuperChunkTypeAdapter::expected_tick_difference;
   static constexpr double daphnestream_dropout_rate = 0.0;
-  static constexpr double daphnestream_rate_khz = 62500./daphnestream_time_tick_diff/fdreadoutlibs::types::kDAPHNEStreamNumFrames;
+  static constexpr double daphnestream_rate_khz =
+    62500. / daphnestream_time_tick_diff / fdreadoutlibs::types::kDAPHNEStreamNumFrames;
   static constexpr int daphnestream_frames_per_tick = 1;
 
-  static constexpr int daphne_time_tick_diff = fdreadoutlibs::types::DAPHNESuperChunkTypeAdapter::expected_tick_difference;
+  static constexpr int daphne_time_tick_diff =
+    fdreadoutlibs::types::DAPHNESuperChunkTypeAdapter::expected_tick_difference;
   static constexpr double daphne_dropout_rate = 0.0;
-  static constexpr double daphne_rate_khz = 62500./daphne_time_tick_diff/fdreadoutlibs::types::kDAPHNENumFrames;
+  static constexpr double daphne_rate_khz = 62500. / daphne_time_tick_diff / fdreadoutlibs::types::kDAPHNENumFrames;
   static constexpr int daphne_frames_per_tick = 1;
 
   static constexpr int daphneeth_time_tick_diff = fdreadoutlibs::types::DAPHNEEthTypeAdapter::expected_tick_difference;
   static constexpr double daphneeth_dropout_rate = 0.0;
-  static constexpr double daphneeth_rate_khz = 62500./daphneeth_time_tick_diff;
+  static constexpr double daphneeth_rate_khz = 62500. / daphneeth_time_tick_diff;
   static constexpr int daphneeth_frames_per_tick = 1;
 
-  static constexpr int daphneethstream_time_tick_diff = fdreadoutlibs::types::DAPHNEEthStreamTypeAdapter::expected_tick_difference;
+  static constexpr int daphneethstream_time_tick_diff =
+    fdreadoutlibs::types::DAPHNEEthStreamTypeAdapter::expected_tick_difference;
   static constexpr double daphneethstream_dropout_rate = 0.0;
-  static constexpr double daphneethstream_rate_khz = 62500./daphneethstream_time_tick_diff/fdreadoutlibs::types::kDAPHNEEthStreamNumFrames;
+  static constexpr double daphneethstream_rate_khz =
+    62500. / daphneethstream_time_tick_diff / fdreadoutlibs::types::kDAPHNEEthStreamNumFrames;
   static constexpr int daphneethstream_frames_per_tick = 1;
 
-  static constexpr int wibeth_time_tick_diff = fdreadoutlibs::types::DUNEWIBEthTypeAdapter::expected_tick_difference;;
+  static constexpr int wibeth_time_tick_diff = fdreadoutlibs::types::DUNEWIBEthTypeAdapter::expected_tick_difference;
+  ;
   static constexpr double wibeth_dropout_rate = 0.0;
-  static constexpr double wibeth_rate_khz = 62500./wibeth_time_tick_diff;
+  static constexpr double wibeth_rate_khz = 62500. / wibeth_time_tick_diff;
   static constexpr int wibeth_frames_per_tick = 1;
 
   static constexpr int tdeeth_time_tick_diff = fdreadoutlibs::types::TDEEthTypeAdapter::expected_tick_difference;
   static constexpr double tdeeth_dropout_rate = 0.0;
-  static constexpr double tdeeth_rate_khz = 62500./tdeeth_time_tick_diff;
+  static constexpr double tdeeth_rate_khz = 62500. / tdeeth_time_tick_diff;
   static constexpr int tdeeth_frames_per_tick = 1;
 
   static constexpr int crtbern_time_tick_diff = 2500;
@@ -150,7 +156,7 @@ FDFakeReaderModule::create_source_emulator(const appmodel::DataMoveCallbackConf*
         daphne_rate_khz,
         daphne_frames_per_tick);
     register_node(conf->UID(), source_emu_model);
-      return source_emu_model;
+    return source_emu_model;
   }
 
   // IF PDS Ethernet
@@ -166,7 +172,7 @@ FDFakeReaderModule::create_source_emulator(const appmodel::DataMoveCallbackConf*
         daphneeth_rate_khz,
         daphneeth_frames_per_tick);
     register_node(conf->UID(), source_emu_model);
-      return source_emu_model;
+    return source_emu_model;
   }
 
   // IF PDSStream
